@@ -2,6 +2,7 @@
 #include <nse/utility.hpp>
 #include <nse/field.hpp>
 #include <nse/static_block.hpp>
+#include <nds/encoder/nse_block.hpp>
 #include <array>
 #include <sstream>
 
@@ -49,7 +50,8 @@ namespace nse
         _table.read(buffer.data(), buffer.size());
         if (_table.tellg() < 0) return;
         static_block<header::entity_size()> data(std::move(buffer));
-        _header.decode(data);
+        //_header.decode(data);
+        nds::encoder<>::decode(data, _header);
         // set buffer offset to end of osfile
         _buffer.offset_set(table_size());
     }

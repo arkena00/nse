@@ -10,7 +10,7 @@ namespace nse
     {
     public:
         template<class T, std::enable_if_t<std::is_fundamental<T>::value, bool> = 0>
-        static T read(base_block& block, size_t offset, size_t data_size)
+        static T read(const base_block& block, size_t offset, size_t data_size)
         {
             const T t = *(reinterpret_cast<const T*>(block.data() + offset));
             return t;

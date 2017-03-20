@@ -46,7 +46,7 @@ namespace nse
         constexpr static size_t field_size() { return trait::entity_field_size<N, Ts...>(); }
 
         template<size_t N>
-        auto field_get(base_block& block) { return io::read<size_t>(block, field_offset<N>(), field_size<N>()); }
+        static auto field_get(const base_block& block) { return io::read<size_t>(block, field_offset<N>(), field_size<N>()); }
 
         std::array<char, size()> _data;
         std::array<char, field_count()> _field_offset;

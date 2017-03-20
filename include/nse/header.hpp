@@ -4,6 +4,7 @@
 #include <nse/entity.hpp>
 #include <nse/field.hpp>
 #include <nse/static_block.hpp>
+#include <nds/encoder/nse_block.hpp>
 
 namespace nse
 {
@@ -13,6 +14,8 @@ namespace nse
     >;
     struct header : public Header
     {
+        using linear_type = nse::static_block<entity_size()>;
+
         size_t _entity_count;
         size_t _zeta;
 
@@ -27,17 +30,21 @@ namespace nse
             store(block, 0, _entity_count, _zeta);
         }
 
-        void decode(base_block& data)
-        {
-            _entity_count = Header::field_get<0>(data);
-            _zeta = Header::field_get<1>(data);
-        }
-
         void entity_add() { _entity_count++; }//entity::field<0>().set(entity::field<0>().get() + 1); }
         void entity_del() { _entity_count--; } //entity::field<0>().set(entity::field<0>().get() - 1); }
 
         size_t entity_count() const { return _entity_count; } //entity::field_const<0>().get(); }
     };
 } // nse
+
+namespace nds
+{
+    template<>
+    void encoder<>::decode(const nse::header::linear_type& data, nse::header& header)
+    {
+        header._entity_count = nse::header::field_get<0>(data);
+        header._zeta = nse::header::field_get<1>(data);
+    }
+} // nds
 
 #endif // HEADER_H_NSE
