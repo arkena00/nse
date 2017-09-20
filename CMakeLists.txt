@@ -1,5 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.1)
-
+﻿cmake_minimum_required(VERSION 3.8)
 project(nse)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -16,7 +15,7 @@ add_executable(nse ${SOURCE_LIST})
 add_executable(nse_test "test/main.cpp")
 
 set_target_properties(nse
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "bin"
-        OUTPUT_NAME  "nse"
-        )
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "bin"
+    OUTPUT_NAME  "nse"
+)

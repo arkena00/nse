@@ -8,7 +8,6 @@ namespace ndb
     template<class Engine>
     class engine
     {
-
     };
 } // ndb
 
