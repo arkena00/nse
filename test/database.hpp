@@ -15,7 +15,7 @@ namespace db
             using name = field<char, 255>;
             using lastname = field<char, 255>;
 
-            using entity = ndb::table<name, lastname>;
+            using entity = ndb::entity<name, lastname>;
         };
 
         struct movie : ndb::table
