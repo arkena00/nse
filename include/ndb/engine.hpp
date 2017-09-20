@@ -5,7 +5,7 @@
 
 namespace ndb
 {
-    template<class Engine>
+    template<class Engine = setup<>::engine>
     class engine
     {
 
