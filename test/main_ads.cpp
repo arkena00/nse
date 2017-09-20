@@ -9,7 +9,8 @@ struct movie : public db::library::movie::entity
 /*
  * Create table structure
 */
-struct table_test {
+struct table_test
+{
     using firstName = ndb::field<char, 255>;
     using lastName = ndb::field<char, 255>;
     using user = ndb::entity<firstName, lastName>;
