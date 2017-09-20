@@ -28,6 +28,6 @@ int main()
     assert(table_test::size() == 510);
     assert(db::tables::author::entity::count() == 2);
     assert(db::tables::author::entity::size() == 510);
-    assert(table_test::user::offset<1>());
+    assert(table_test::user::offset<1>() == 255);
     return 0;
 }
