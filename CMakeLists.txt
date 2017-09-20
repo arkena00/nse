@@ -11,9 +11,3 @@ include_directories(include)
 file(GLOB_RECURSE SOURCE_LIST "source/*.cpp" "include/*.hpp")
 
 add_executable(nse_test "test/main.cpp")
-
-set_target_properties(nse
-    PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "bin"
-    OUTPUT_NAME  "nse"
-)
