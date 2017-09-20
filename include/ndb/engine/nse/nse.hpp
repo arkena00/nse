@@ -13,8 +13,9 @@ namespace ndb
         template<class Model>
         static constexpr void make()
         {
-            generic_model<Model> m;
-            std::cout << "\nmake : " << Model::name_ << " test : " << m.get<0>() << m.get<1>();
+            constexpr generic_model<Model> m;
+            static_assert(m.get<0>() == 0x61);
+            //std::cout << "\nmake : " << Model::name_ << " test : " << m.get<0>() << m.get<1>();
         }
     };
 } // db

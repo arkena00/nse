@@ -2,6 +2,8 @@
 #define MODEL_H_NDB
 
 #include <array>
+#include <type_traits>
+#include <ndb/table.hpp>
 
 namespace ndb
 {
@@ -9,6 +11,33 @@ namespace ndb
     {
 
     };
+
+    struct generic_model_entity
+    {
+        using id = uint8_t;
+        using type_id = uint8_t;
+        using count_type = uint8_t;
+
+        enum code : uint8_t
+        {
+            end = 0,
+            table = 200,
+            table_field_array,
+            table_field_link,
+            table_option,
+            field
+        };
+    };
+
+
+
+    template<class Entity>
+    int generic_model_code()
+    {
+        if (std::is_base_of<ndb::table, Entity>::value) return generic_model_entity::table;
+        else if (std::is_base_of<ndb::field, Entity>::value) return generic_model_entity::field;
+        return 0;
+    }
 
 
     namespace trait
@@ -28,7 +57,7 @@ namespace ndb
         }
 
         template<std::size_t N>
-        constexpr char get()
+        constexpr char get() const
         {
             return std::get<N>(array_);
         }

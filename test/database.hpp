@@ -45,6 +45,7 @@ namespace db
         using sound = tables::sound;
 
         using entity = ndb::entity<movie, sound>;
+
     };
 
 } // db

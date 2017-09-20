@@ -7,8 +7,9 @@
 namespace ndb
 {
     template<class Engine>
-    struct engine
+    class engine
     {
+    public:
         template<class Model>
         static constexpr void make()
         {
