@@ -11,7 +11,7 @@ namespace db
     {
         struct author : ndb::table
         {
-            constexpr static auto name_ = "author";
+            static constexpr auto name_ = "author";
             using name = field<char, 255>;
             using lastname = field<char, 255>;
 
@@ -20,7 +20,7 @@ namespace db
 
         struct movie : ndb::table
         {
-            constexpr static auto name_ = "movie";
+            static constexpr auto name_ = "movie";
             using id = field<int>;
             using name = field<char, 255>;
             using author = field<tables::author>;
@@ -30,7 +30,7 @@ namespace db
 
         struct sound : ndb::table
         {
-            constexpr static auto name_ = "sound";
+            static constexpr auto name_ = "sound";
             using id = field<int>;
             using author = tables::author;
 
@@ -40,7 +40,7 @@ namespace db
 
     struct library : ndb::model
     {
-        constexpr static auto name_ = "library";
+        static constexpr auto name_ = "library";
         using movie = tables::movie;
         using sound = tables::sound;
 

@@ -10,7 +10,7 @@ namespace ndb
     {
     public:
         template<class Model>
-        constexpr static void make()
+        static constexpr void make()
         {
             std::cout << "\nmake : " << Model::name_;
         }
@@ -18,3 +18,8 @@ namespace ndb
 } // db
 
 #endif // ENGINE_NSE_NSE_H_NDB
+
+nse::for_each([&](auto N, auto&& v)
+{
+entity::hydrate<decltype(N){}>(block, offset, field_type<N>{}, std::forward<decltype(v)>(v));
+}, args...);

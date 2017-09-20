@@ -13,12 +13,12 @@ namespace nse
 
         // first field offset
         template<class Field, class... Ts>
-        struct field_offset<0, Field, Ts...> { constexpr static auto value = 0; };
+        struct field_offset<0, Field, Ts...> { static constexpr auto value = 0; };
 
         template<size_t N, class Field, class... Ts>
         struct field_offset
         {
-            constexpr static auto value = field_offset<N - 1, Ts...>::value + Field::size();
+            static constexpr auto value = field_offset<N - 1, Ts...>::value + Field::size();
         };
 
         template<size_t N, class... Ts>
@@ -28,12 +28,12 @@ namespace nse
         template<size_t N, class Field, class... Ts> struct field_size;
 
         template<class Field, class... Ts>
-        struct field_size<0, Field, Ts...> { constexpr static auto value = Field::size(); };
+        struct field_size<0, Field, Ts...> { static constexpr auto value = Field::size(); };
 
         template<size_t N, class Field, class... Ts>
         struct field_size
         {
-            constexpr static auto value = field_size<N - 1, Ts...>::value;
+            static constexpr auto value = field_size<N - 1, Ts...>::value;
         };
 
         template<size_t N, class... Ts>

@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.7)
 project(nse)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -10,4 +10,6 @@ include_directories(include)
 
 file(GLOB_RECURSE SOURCE_LIST "source/*.cpp" "include/*.hpp")
 
-add_executable(nse_test "test/main.cpp")
+add_executable(test_zed "test/main.cpp")
+
+add_executable(test_ads "test/main_ads.cpp")
