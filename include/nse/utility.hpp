@@ -55,6 +55,7 @@ namespace nse
     }
 } // nse
 
+/*
 namespace graphic {
     inline std::ostream &operator<<(std::ostream &os, char c) {
         return os << (std::is_signed<char>::value ? static_cast<int>(c)
@@ -69,5 +70,5 @@ namespace graphic {
         return os << static_cast<unsigned int>(c);
     }
 } // graphic
-
+*/
 #endif // UTILITY_H_NSE

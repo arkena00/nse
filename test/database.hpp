@@ -1,6 +1,7 @@
 #include <ndb/model.hpp>
 #include <ndb/table.hpp>
 #include <ndb/field.hpp>
+#include <ndb/entity.hpp>
 
 namespace db
 {
