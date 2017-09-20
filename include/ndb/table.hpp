@@ -3,7 +3,6 @@
 
 namespace ndb
 {
-    template<class... Fields>
     class table
     {
 

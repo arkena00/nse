@@ -18,15 +18,15 @@ namespace nse
     public:
         io_access_drive() {}
 
-        void write(size_t index, char* data, size_t data_size) override
+        void write(size_t , char* , size_t ) override
         {
 
         }
 
     private:
         std::string path_;
-        std::fstream static_data_;
-        std::fstream dynamic_data_;
+        //std::fstream static_data_;
+        //std::fstream dynamic_data_;
 
     };
 
