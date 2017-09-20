@@ -8,7 +8,7 @@ int main()
 {
     movie test;
 
-    ndb::engine<>::make<db::library>();
+    ndb::engine<ndb::nse>::make<db::library>();
 
     return 0;
 }

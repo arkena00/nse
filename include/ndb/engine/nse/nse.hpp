@@ -7,7 +7,7 @@
 
 namespace ndb
 {
-    class nse : public engine<nse>
+    class nse : engine<nse>
     {
     public:
         template<class Model>
