@@ -48,7 +48,7 @@ namespace ndb
     template<class DB_Entity, class F>
     void for_each_entity(DB_Entity&& e, F&& f)
     {
-        using Entity = typename std::decay_t<decltype(e)>::entity;
+        using Entity = typename std::decay_t<decltype(e.detail)>::entity;
         using Ns = std::make_index_sequence<Entity::count()>;
         detail::for_each_entity_impl<Entity>(Ns{}, std::forward<F>(f));
     }
