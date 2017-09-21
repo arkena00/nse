@@ -1,25 +1,18 @@
 #ifndef TABLE_H_NDB
 #define TABLE_H_NDB
 
+#include <tuple>
+
 namespace ndb
 {
-    namespace trait
+    struct detail_table
     {
-        template<class Derived>
-        struct detail_base_impl
-        {
-            using type = typename Derived::detail_;
-        };
-        template<class Derived> using detail_base = typename detail_base_impl<Derived>::type;
-    }
+        const char * const name;
+        constexpr detail_table(const char * n) : name{n} { }
+    };
 
-    struct table_base {};
-
-    template<class Base>
-    class table : table_base
+    class table
     {
-    public:
-        trait::detail_base<Base> detail;
     };
 } // ndb
 
