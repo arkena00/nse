@@ -5,9 +5,11 @@
 
 namespace ndb
 {
+    //base field
+    struct base_field {};
     // static field
     template<class T, size_t Size = sizeof(T)>
-    struct field
+    struct field : base_field
     {
         using type = T;
 
