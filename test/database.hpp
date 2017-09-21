@@ -23,7 +23,8 @@ namespace db
             static constexpr auto name_ = "movie";
             using id = field<int>;
             using name = field<char, 255>;
-            using author = field<tables::author>;
+            //using author = field<tables::author>;
+            using author = field<char, 100>;
 
             using entity = ndb::entity<id, name, author>;
         };
@@ -32,7 +33,8 @@ namespace db
         {
             static constexpr auto name_ = "sound";
             using id = field<int>;
-            using author = tables::author;
+            //using author = tables::author;
+            using author = field<char, 100>;
 
             using entity = ndb::entity<id, author>;
         };

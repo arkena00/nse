@@ -3,8 +3,8 @@
 
 #include <array>
 #include <type_traits>
-#include "ndb/table.hpp"
-#include "ndb/field.hpp"
+#include <ndb/table.hpp>
+#include <ndb/field.hpp>
 
 namespace ndb
 {

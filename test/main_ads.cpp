@@ -11,14 +11,14 @@ int main()
 
     ndb::engine<>::make<db::library>();
 
-    ndb::for_each_entity<db::library::movie>([](auto&& index, auto&& item)
+    ndb::for_each_entity<db::library>([](auto&& index, auto&& table)
     {
-        std::cout << "\nindex : " << index << " : " << item.size();
-    });
+        std::cout << "\ntable : " << index << " : " << table.name_;
 
-    ndb::for_each_entity<db::library>([](auto&& index, auto&& item)
-    {
-        std::cout << "\nindex : " << index << " : " << item.name_;
+        ndb::for_each_entity(table, [](auto&& i, auto&& field)
+        {
+            std::cout << "\nindex : " << i << " : " << field.size();
+        });
     });
 
     return 0;
