@@ -43,9 +43,9 @@ int main()
           std::cout << "\nindex : " << i << " : " << field.size;
         });
     });
-    assert_same_type(size_t_wrapper<359>{}, ndb::trait::array_size_for<db::library::movie>::type{});
-    assert_same_type(size_t_wrapper<104>{}, ndb::trait::array_size_for<db::library::sound>::type{});
-    assert_same_type(size_t_wrapper<463>{}, ndb::trait::array_size_for<db::library>::type{});
+    assert_same_type(size_t_wrapper<260>{}, ndb::trait::array_size_for<db::library::movie>::type{});
+    assert_same_type(size_t_wrapper<5>{}, ndb::trait::array_size_for<db::library::sound>::type{});
+    assert_same_type(size_t_wrapper<265>{}, ndb::trait::array_size_for<db::library>::type{});
     std::cout << "\n" << ndb::trait::array_size_for<db::library>::type::value;
     std::cout << "\n" << ndb::trait::array_size_for<db::library::movie>::type::value;
     std::cout << "\n" << ndb::trait::array_size_for<db::library::sound>::type::value;
