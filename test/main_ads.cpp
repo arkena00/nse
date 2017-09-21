@@ -2,7 +2,7 @@
 #include <ndb/utility.hpp>
 #include "database.hpp"
 
-struct movie : public db::library::movie::entity
+struct movie : public db::library::movie
 {};
 
 int main()
@@ -11,15 +11,26 @@ int main()
 
     ndb::engine<>::make<db::library>();
 
+    ndb::for_each_entity<db::library::movie>([](auto&& i, auto&& field)
+    {
+        std::cout << "\nindex : " << i << " : " << field.size;
+    });
+
+    /*
     ndb::for_each_entity<db::library>([](auto&& index, auto&& table)
     {
-        std::cout << "\ntable : " << index << " : " << table.name_;
+        std::cout << "\ntable : " << index << " : " << table.detail.name;
 
         ndb::for_each_entity(table, [](auto&& i, auto&& field)
         {
-            std::cout << "\nindex : " << i << " : " << field.size();
+            std::cout << "\nindex : " << i << " : " << field.size;
         });
-    });
+    });*/
+
+    std::cout << std::boolalpha << std::endl << ndb::is_field<movie::name>;
+    std::cout << std::boolalpha << std::endl << ndb::is_field<movie>;
+    std::cout << std::boolalpha << std::endl << ndb::is_table<movie::name>;
+    std::cout << std::boolalpha << std::endl << ndb::is_table<movie>;
 
     return 0;
 }
