@@ -28,14 +28,13 @@ int main()
     std::cout << "\n" << table_test::user::offset<1>();
     std::cout << "\n" << table_test::user::offset<2>();
 
-    ndb::for_each_entity<db::library>([](auto&& index, auto&& table)
-      {
+    ndb::for_each_entity<db::library>([](auto&& index, auto&& table) {
         std::cout << "\ntable : " << index << " : " << table.detail.name;
 
         ndb::for_each_entity(table, [](auto&& i, auto&& field)
         {
           std::cout << "\nindex : " << i << " : " << field.size();
         });
-      });
+    });
     return 0;
 }
