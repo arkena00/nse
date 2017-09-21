@@ -2,6 +2,8 @@
 #define FIELD_H_NDB
 
 #include <nse/type.hpp>
+#include <ndb/table.hpp>
+#include <ndb/utility.hpp>
 
 namespace ndb
 {
@@ -9,22 +11,35 @@ namespace ndb
     struct field_base {};
 
     // static field
-    template<class T, size_t Size = sizeof(T)>
+    template<class T, size_t Size = sizeof(T), class = void>
     struct field : field_base
     {
         using type = T;
 
-        static constexpr size_t size() { return Size; }
+        static constexpr size_t size = Size;
     };
 
     // dynamic field
-    template<class T, size_t Size>
+    /*
+    template<class T, size_t Size, typename std::enable_if_t<!ndb::is_field<T>, T>>
     struct field<T*, Size>
     {
         using type = T*;
 
-        static constexpr size_t size() { return sizeof(size_t); }
-    };
+        static constexpr size_t size = sizeof(size_t);
+    };*/
+
+    template<class T>
+    using Field_link_table = typename std::enable_if_t<ndb::is_field_link_table<T>, T>;
+    // field link table
+
+    template<class T, size_t Size>
+    struct field<T, Size, typename std::enable_if_t<std::is_base_of<ndb::table, T>::value>>
+{
+
+    static constexpr size_t size = 999;
+};
+
 } // ndb
 
 #endif // FIELD_H_NDB
