@@ -12,6 +12,9 @@ namespace ndb
     class entity
     {
     public:
+        template<size_t N>
+        using type_at = std::tuple_element_t<N, std::tuple<Ts...>>;
+
         static constexpr auto count()
         {
             return sizeof...(Ts);

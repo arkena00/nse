@@ -9,12 +9,20 @@ namespace ndb
 {
     namespace detail
     {
-        // for each entity, get field
-        template<class... Ts, std::size_t... N, class F>
-        void for_each_impl(std::index_sequence<N...>, F&& f)
+        // call f for each type
+        template<class... Ts, std::size_t... Ns, class F>
+        void for_each_impl(std::index_sequence<Ns...>, F&& f)
         {
             using expand = int[];
-            (void) expand{1, ((void) std::forward<F>(f)(std::integral_constant<std::size_t, N>{}, std::forward<Ts>(Ts{})), 0)...};
+            (void)expand{(std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, Ts{}), 0)...};
+        }
+
+        // call f for each table or field
+        template<class Entity, std::size_t... Ns, class F>
+        void for_each_entity_impl(std::index_sequence<Ns...>&&, F&& f)
+        {
+            using expand = int[];
+            (void)expand{((void)std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, Entity::type_at<Ns>{}), 0)...};
         }
     } // detail
 
@@ -22,6 +30,13 @@ namespace ndb
     void for_each(F&& f)
     {
         detail::for_each_impl<Ts...>(std::index_sequence_for<Ts...>{}, std::forward<F>(f));
+    }
+
+    template<class DB_Entity, class F>
+    void for_each_entity(F&& f)
+    {
+        using Ns = std::make_index_sequence<DB_Entity::entity::count()>;
+        detail::for_each_entity_impl<DB_Entity::entity>(Ns{}, std::forward<F>(f));
     }
 } // nse
 
