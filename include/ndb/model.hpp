@@ -43,8 +43,14 @@ namespace ndb
 
     namespace trait
     {
+        template<class DB_Entity>
+        struct array_size_for_impl {
+            using type = std::integral_constant<std::size_t, DB_Entity::size()>;
+        };
         template<class Model>
-        struct array_size_for { static constexpr std::size_t value = 9; };
+        struct array_size_for {
+            using type = typename array_size_for_impl<typename Model::detail_::entity>::type;
+        };
     } // trait
 
     template<std::size_t ModelSize>

@@ -24,7 +24,7 @@ namespace ndb
         {
             std::size_t sum = 0;
             using expand = std::size_t[];
-            (void)expand{(sum += Ts::size)...};
+            (void)expand{(sum += Ts::detail_::size)...};
             return sum;
         }
 
