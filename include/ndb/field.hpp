@@ -14,7 +14,7 @@ namespace ndb
     {
         using type = T;
 
-        static constexpr size_t size() { return Size; }
+        static constexpr size_t size = Size;
     };
 
     // dynamic field
@@ -23,7 +23,7 @@ namespace ndb
     {
         using type = T*;
 
-        static constexpr size_t size() { return sizeof(size_t); }
+        static constexpr size_t size = sizeof(size_t);
     };
 } // ndb
 

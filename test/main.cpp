@@ -33,7 +33,7 @@ int main()
 
         ndb::for_each_entity(table, [](auto&& i, auto&& field)
         {
-          std::cout << "\nindex : " << i << " : " << field.size();
+          std::cout << "\nindex : " << i << " : " << field.size;
         });
     });
     return 0;
