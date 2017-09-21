@@ -33,10 +33,17 @@ namespace ndb
     }
 
     template<class DB_Entity, class F>
+    void for_each_entity(DB_Entity&& e, F&& f)
+    {
+        using Entity = std::decay_t<decltype(e)>::entity;
+        using Ns = std::make_index_sequence<Entity::count()>;
+        detail::for_each_entity_impl<Entity>(Ns{}, std::forward<F>(f));
+    }
+
+    template<class DB_Entity, class F>
     void for_each_entity(F&& f)
     {
-        using Ns = std::make_index_sequence<DB_Entity::entity::count()>;
-        detail::for_each_entity_impl<DB_Entity::entity>(Ns{}, std::forward<F>(f));
+        for_each_entity(DB_Entity{}, std::forward<F>(f));
     }
 } // nse
 
