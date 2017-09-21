@@ -5,7 +5,6 @@ namespace ndb
 {
     class table
     {
-        //constexpr auto name() const { return  }
     };
 } // ndb
 
