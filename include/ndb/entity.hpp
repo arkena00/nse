@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 #include <cstddef>
-#include <nse/utility.hpp>
+#include <ndb/utility.hpp>
 
 namespace ndb
 {
@@ -25,16 +25,16 @@ namespace ndb
             return sum;
         }
 
-        template<std::size_t Index>
+        template<std::size_t N>
         static constexpr auto offset()
         {
-            static_assert(Index < sizeof...(Ts), "Error : Index is higher than parameter pack");
+            static_assert(N < sizeof...(Ts), "Error : Index is higher than parameter pack");
             std::size_t sum = 0;
-            ::nse::for_each([&sum](auto&& v, auto&& pack)
+            ndb::for_each<Ts...>([&sum](auto&& index, auto&& item)
             {
-                if (v >= Index) return;
-                sum += std::decay_t<decltype(pack)>::size();
-            }, Ts{}...);
+                if (index >= N) return;
+                sum += item.size();
+            });
             return sum;
         }
     };
