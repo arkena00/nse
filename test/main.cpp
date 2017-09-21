@@ -2,6 +2,7 @@
 #include <cassert>
 #include <ndb/engine/nse/nse.hpp>
 #include "database.hpp"
+#include "ndb/model.hpp"
 
 struct movie : public db::library::movie::entity
 {};
@@ -23,6 +24,10 @@ int main()
 {
     movie test;
 
+    //constexpr std::size_t s = ndb::trait::array_size_for<db::library>::value;
+    //constexpr ndb::generic_model<s> m;
+    //static_assert(m.get<0>() == 0x61, "");
+    //ndb::engine<>::make<db::library>();
     std::cout << std::endl;
     assert(table_test::count() == 2);
     assert(table_test::size() == 510);

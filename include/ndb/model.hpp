@@ -47,7 +47,7 @@ namespace ndb
         struct array_size_for { static constexpr std::size_t value = 9; };
     } // trait
 
-    template<class Model>
+    template<std::size_t ModelSize>
     class generic_model
     {
     public:
@@ -57,14 +57,14 @@ namespace ndb
             std::get<1>(array_) = 0x62;
         }
 
-        template<std::size_t N>
+        template<unsigned N>
         constexpr char get() const
         {
             return std::get<N>(array_);
         }
 
     private:
-        std::array<char, trait::array_size_for<Model>::value> array_ {};
+        std::array<char, ModelSize> array_ {};
     };
 
 } // ndb

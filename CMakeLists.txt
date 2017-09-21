@@ -15,4 +15,4 @@ file(GLOB_RECURSE SOURCE_LIST "source/*.cpp" "include/*.hpp")
 
 add_executable(test_zed "test/main.cpp")
 
-add_executable(test_ads "test/main_ads.cpp")
+add_executable(test_ads "test/main_ads.cpp" include/ndb/engine/nse/database.hpp)

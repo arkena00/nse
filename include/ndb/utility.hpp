@@ -36,7 +36,7 @@ namespace ndb
     void for_each_entity(F&& f)
     {
         using Ns = std::make_index_sequence<DB_Entity::entity::count()>;
-        detail::for_each_entity_impl<DB_Entity::entity>(Ns{}, std::forward<F>(f));
+        detail::for_each_entity_impl<typename DB_Entity::entity>(Ns{}, std::forward<F>(f));
     }
 } // nse
 
