@@ -2,10 +2,6 @@
 #include <cassert>
 #include <ndb/engine/nse/nse.hpp>
 #include "database.hpp"
-
-struct movie : public db::library::movie::entity
-{};
-
 /*
  * Create table structure
 */
@@ -21,8 +17,6 @@ struct table_test {
 
 int main()
 {
-    movie test;
-
     std::cout << std::endl;
     assert(table_test::count() == 2);
     assert(table_test::size() == 510);
@@ -33,5 +27,15 @@ int main()
     std::cout << "\n" << table_test::user::offset<0>();
     std::cout << "\n" << table_test::user::offset<1>();
     std::cout << "\n" << table_test::user::offset<2>();
+
+    ndb::for_each_entity<db::library>([](auto&& index, auto&& table)
+      {
+        std::cout << "\ntable : " << index << " : " << table.detail.name;
+
+        ndb::for_each_entity(table, [](auto&& i, auto&& field)
+        {
+          std::cout << "\nindex : " << i << " : " << field.size();
+        });
+      });
     return 0;
 }
