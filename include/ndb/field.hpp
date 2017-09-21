@@ -33,7 +33,7 @@ namespace ndb
         using type = T*;
 
         static constexpr size_t size = sizeof(size_t);
-        using detail_ = detail_field<Size>;
+        using detail_ = detail_field<size>;
     };
 
     // field link
@@ -41,7 +41,7 @@ namespace ndb
     struct field<T, Size, typename std::enable_if_t<ndb::is_table<T>>>
     {
         static constexpr size_t size = sizeof(size_t);
-        using detail_ = detail_field<Size>;
+        using detail_ = detail_field<size>;
     };
 
 } // ndb
