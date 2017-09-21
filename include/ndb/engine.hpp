@@ -1,8 +1,8 @@
 #ifndef ENGINE_ENGINE_H_NDB
 #define ENGINE_ENGINE_H_NDB
 
-#include <ndb/engine/setup.hpp>
-#include <ndb/model.hpp>
+#include "ndb/engine/setup.hpp"
+#include "ndb/model.hpp"
 
 namespace ndb
 {
