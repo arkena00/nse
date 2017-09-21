@@ -36,7 +36,7 @@ namespace ndb
     int generic_model_code()
     {
         if (std::is_base_of<ndb::table, Entity>::value) return generic_model_entity::table;
-        else if (std::is_base_of<ndb::base_field, Entity>::value) return generic_model_entity::field;
+        else if (std::is_base_of<ndb::field_base, Entity>::value) return generic_model_entity::field;
         return 0;
     }
 
