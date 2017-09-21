@@ -11,32 +11,32 @@ namespace db
     {
         struct author : ndb::table
         {
-            static constexpr ndb::detail_table detail{"author"};
             using name = field<char, 255>;
             using lastname = field<char, 255>;
 
             using entity = ndb::entity<name, lastname>;
+            static constexpr ndb::detail_table detail{"author"};
         };
 
         struct movie : ndb::table
         {
-            static constexpr ndb::detail_table detail{"movie"};
             using id = field<int>;
             using name = field<char, 255>;
             //using author = field<tables::author>;
             using author = field<char, 100>;
 
             using entity = ndb::entity<id, name, author>;
+            static constexpr ndb::detail_table detail{"movie"};
         };
 
         struct sound : ndb::table
         {
-            static constexpr ndb::detail_table detail{"sound"};
             using id = field<int>;
             //using author = tables::author;
             using author = field<char, 100>;
 
             using entity = ndb::entity<id, author>;
+            static constexpr ndb::detail_table detail{"sound"};
         };
     } // tables
 
