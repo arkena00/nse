@@ -3,7 +3,8 @@
 
 #include <array>
 #include <type_traits>
-#include <ndb/table.hpp>
+#include "ndb/table.hpp"
+#include "ndb/field.hpp"
 
 namespace ndb
 {
@@ -35,7 +36,7 @@ namespace ndb
     int generic_model_code()
     {
         if (std::is_base_of<ndb::table, Entity>::value) return generic_model_entity::table;
-        else if (std::is_base_of<ndb::field, Entity>::value) return generic_model_entity::field;
+        else if (std::is_base_of<ndb::base_field, Entity>::value) return generic_model_entity::field;
         return 0;
     }
 
