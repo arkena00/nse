@@ -13,7 +13,7 @@ namespace ndb
         template<class M>
         static constexpr void make()
         {
-            constexpr generic_model<trait::array_size_for<M>::value> m;
+            constexpr generic_model<trait::array_size_for<M>::type::value> m;
             static_assert(m.template get<0>() == 0x61, "");
             //std::cout << "\nmake : " << Model::name_ << " test : " << m.get<0>() << m.get<1>();
         }

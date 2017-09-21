@@ -14,7 +14,8 @@ namespace ndb
 
     //detail_field
     template<std::size_t Size, typename... Options>
-    struct detail_field {
+    struct detail_field
+    {
         static constexpr size_t size = Size + sizeof...(Options);
     };
 
@@ -25,28 +26,26 @@ namespace ndb
         using type = T;
 
         static constexpr size_t size = Size;
+        using detail_ = detail_field<Size>;
     };
 
     // dynamic field
-    /*
-    template<class T, size_t Size, typename std::enable_if_t<!ndb::is_field<T>, T>>
+    template<class T, size_t Size>
     struct field<T*, Size>
     {
         using type = T*;
 
         static constexpr size_t size = sizeof(size_t);
-    };*/
+        using detail_ = detail_field<Size>;
+    };
 
-    template<class T>
-    using Field_link_table = typename std::enable_if_t<ndb::is_field_link_table<T>, T>;
-    // field link table
-
+    // field link
     template<class T, size_t Size>
-    struct field<T, Size, typename std::enable_if_t<std::is_base_of<ndb::table, T>::value>>
-{
-
-    static constexpr size_t size = 999;
-};
+    struct field<T, Size, typename std::enable_if_t<ndb::is_table<T>>>
+    {
+        static constexpr size_t size = sizeof(size_t);
+        using detail_ = detail_field<Size>;
+    };
 
 } // ndb
 

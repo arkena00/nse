@@ -24,8 +24,8 @@ namespace db
         {
             using id = field<int>;
             using name = field<char, 255>;
-            //using author = field<tables::author>;
-            using author = field<char, 100>;
+            using author = field<tables::author>;
+            // using author = field<tables::author, option::many>;
 
             using detail_ = ndb::detail_table<
                 ndb::entity<id, name, author>
@@ -36,7 +36,7 @@ namespace db
         struct sound : ndb::table
         {
             using id = field<int>;
-            using author = field<char, 100>;
+            using author = field<tables::author>;
 
             using detail_ = ndb::detail_table<
                 ndb::entity<id, author>
