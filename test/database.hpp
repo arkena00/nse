@@ -9,7 +9,7 @@ namespace db
 
     namespace tables
     {
-        struct author : ndb::table
+        struct author : ndb::table<author>
         {
             static constexpr auto name_ = "author";
             using name = field<char, 255>;
@@ -18,7 +18,7 @@ namespace db
             using entity = ndb::entity<name, lastname>;
         };
 
-        struct movie : ndb::table
+        struct movie : ndb::table<movie>
         {
             static constexpr auto name_ = "movie";
             using id = field<int>;
@@ -29,7 +29,7 @@ namespace db
             using entity = ndb::entity<id, name, author>;
         };
 
-        struct sound : ndb::table
+        struct sound : ndb::table<sound>
         {
             static constexpr auto name_ = "sound";
             using id = field<int>;

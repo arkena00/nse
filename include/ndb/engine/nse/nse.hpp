@@ -4,7 +4,6 @@
 #include <ndb/engine.hpp>
 #include <ndb/model.hpp>
 #include <iostream>
-#include "database.hpp"
 
 namespace ndb
 {

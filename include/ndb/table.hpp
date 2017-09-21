@@ -3,9 +3,18 @@
 
 namespace ndb
 {
-    class table
-    {
+    class table_base {};
 
+    template<typename D>
+    class table : table_base
+    {
+        template<typename Derived>
+        struct detail_t {
+            constexpr detail_t() { name = Derived::name_; };
+            const char *name{};
+        };
+    public:
+        struct detail_t<D> detail{};
     };
 } // ndb
 
