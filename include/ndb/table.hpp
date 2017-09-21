@@ -11,6 +11,7 @@ namespace ndb
         using entity = Entity; //YYAAAAAAAAY
         const char * const name;
         constexpr detail_table(const char * n) : name{n} { }
+        static constexpr std::size_t size = Entity::size() + sizeof...(Options);
     };
 
     class table

@@ -14,7 +14,9 @@ namespace db
             using name = field<char, 255>;
             using lastname = field<char, 255>;
 
-            using detail_ = ndb::detail_table<ndb::entity<name, lastname>>;
+            using detail_ = ndb::detail_table<
+                ndb::entity<name, lastname>
+            >;
             static constexpr detail_ detail{"author"};
         };
 
@@ -22,23 +24,24 @@ namespace db
         {
             using id = field<int>;
             using name = field<char, 255>;
-            using author = field<tables::author>;
-            //using author = field<int>;
+            //using author = field<tables::author>;
+            using author = field<char, 100>;
 
-            static constexpr ndb::detail_table<
+            using detail_ = ndb::detail_table<
                 ndb::entity<id, name, author>
-            > detail{"movie"};
+            >;
+            static constexpr detail_ detail{"movie"};
         };
 
         struct sound : ndb::table
         {
             using id = field<int>;
-            //using author = field<tables::author>;
-            using author = field<int>;
+            using author = field<char, 100>;
 
-            static constexpr ndb::detail_table<
+            using detail_ = ndb::detail_table<
                 ndb::entity<id, author>
-            > detail{"sound"};
+            >;
+            static constexpr detail_ detail{"sound"};
         };
     } // tables
 
@@ -47,9 +50,10 @@ namespace db
         using movie = tables::movie;
         using sound = tables::sound;
 
-        static constexpr ndb::detail_table<
+        using detail_= ndb::detail_table<
             ndb::entity<movie, sound>
-        > detail{"library"};
+        >;
+        static constexpr detail_ detail{"library"};
     };
 
 } // db

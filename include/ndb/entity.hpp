@@ -24,7 +24,7 @@ namespace ndb
         {
             std::size_t sum = 0;
             using expand = std::size_t[];
-            (void)expand{(sum += Ts::size())...};
+            (void)expand{(sum += Ts::detail_::size)...};
             return sum;
         }
 
@@ -36,7 +36,7 @@ namespace ndb
             ndb::for_each<Ts...>([&sum](auto&& index, auto&& item)
             {
                 if (index >= N) return;
-                sum += item.size();
+                sum += item.size;
             });
             return sum;
         }
