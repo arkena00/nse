@@ -9,10 +9,7 @@ namespace ndb
 {
     //TODO : Ajouter le detail_table::size dans le field_table (les champs où on stock des tables)
 
-    // base field
-    struct field_base {};
-
-    //detail_field
+     //detail_field
     template<std::size_t Size, typename... Options>
     struct detail_field {
         static constexpr size_t size = Size + sizeof...(Options);
@@ -25,6 +22,7 @@ namespace ndb
         using type = T;
 
         static constexpr size_t size = Size;
+        using detail_ = detail_field<Size>;
     };
 
     // dynamic field
@@ -43,10 +41,10 @@ namespace ndb
 
     template<class T, size_t Size>
     struct field<T, Size, typename std::enable_if_t<std::is_base_of<ndb::table, T>::value>>
-{
-
-    static constexpr size_t size = 999;
-};
+    {
+        static constexpr size_t size = 999;
+        using detail_ = detail_field<Size>;
+    };
 
 } // ndb
 

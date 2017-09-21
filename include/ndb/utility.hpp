@@ -26,6 +26,7 @@ namespace ndb
         }
     } // detail
 
+    struct field_base {};
 
     template<class T>
     static constexpr bool is_table = std::is_base_of<ndb::table, T>::value;
