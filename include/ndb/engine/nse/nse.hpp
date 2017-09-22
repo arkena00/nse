@@ -1,8 +1,10 @@
 #ifndef ENGINE_NSE_NSE_H_NDB
 #define ENGINE_NSE_NSE_H_NDB
 
+// #include <nse/engine.hpp>
 #include <ndb/engine.hpp>
 #include <ndb/model.hpp>
+#include <ndb/utility.hpp>
 #include <iostream>
 
 namespace ndb
@@ -10,14 +12,22 @@ namespace ndb
     class nse : engine<nse>
     {
     public:
-        template<class M>
+        template<class Model>
         static constexpr void make()
         {
-            constexpr generic_model<trait::array_size_for<M>::type::value> m;
-            static_assert(m.template get<0>() == 0x61, "");
-            //std::cout << "\nmake : " << Model::name_ << " test : " << m.get<0>() << m.get<1>();
+            ndb::for_each_entity<Model>([](auto&& index, auto&& table)
+            {
+                std::cout << "\ncreate table : " << table.detail_.name;
+
+                ndb::for_each_entity(table, [](auto&& i, auto&& field)
+                {
+                    std::cout << "\ncreate field : " << i << " : " << field.detail_.size;
+                });
+            });
         }
     };
 } // db
+
+//TODO: faire un foreach qui parcours tout un model, table et champs
 
 #endif // ENGINE_NSE_NSE_H_NDB

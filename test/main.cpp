@@ -19,8 +19,6 @@ struct table_test {
 template<std::size_t value>
 using size_t_wrapper = std::integral_constant<std::size_t, value>;
 
-template<typename T1, typename T2>
-void assert_same_type(T1, T2) { T1{} = T2{}; }
 
 int main()
 {
@@ -43,9 +41,7 @@ int main()
           std::cout << "\nindex : " << i << " : " << field.size;
         });
     });
-    assert_same_type(size_t_wrapper<359>{}, ndb::trait::array_size_for<db::library::movie>::type{});
-    assert_same_type(size_t_wrapper<104>{}, ndb::trait::array_size_for<db::library::sound>::type{});
-    assert_same_type(size_t_wrapper<463>{}, ndb::trait::array_size_for<db::library>::type{});
+
     std::cout << "\n" << ndb::trait::array_size_for<db::library>::type::value;
     std::cout << "\n" << ndb::trait::array_size_for<db::library::movie>::type::value;
     std::cout << "\n" << ndb::trait::array_size_for<db::library::sound>::type::value;

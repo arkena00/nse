@@ -1,8 +1,9 @@
 #ifndef UTILITY_H_NSE
 #define UTILITY_H_NSE
 
+//! \brief utility functions
+
 #include <utility>
-#include <tuple>
 #include <iostream>
 
 namespace ndb
@@ -26,19 +27,17 @@ namespace ndb
         }
     } // detail
 
-    struct field_base {};
-
     template<class T>
     static constexpr bool is_table = std::is_base_of<ndb::table, T>::value;
 
     template<class T>
     static constexpr bool is_field = std::is_base_of<ndb::field_base, T>::value;
 
-    template<class T>
-    static constexpr bool is_field_link_id = std::is_base_of<ndb::field_base, T>::value;
+    // TODO:
+    //static constexpr bool is_field_link_id = std::is_base_of<ndb::field_base, T>::value;
 
-    template<class T>
-    static constexpr bool is_field_link_table = std::is_base_of<ndb::field_base, T>::value;
+    // TODO:
+    //static constexpr bool is_field_link_table = std::is_base_of<ndb::field_base, T>::value;
 
     template<class... Ts, class F>
     void for_each(F&& f)
@@ -49,7 +48,7 @@ namespace ndb
     template<class DB_Entity, class F>
     void for_each_entity(DB_Entity&& e, F&& f)
     {
-        using Entity = typename std::decay_t<decltype(e.detail)>::entity;
+        using Entity = typename std::decay_t<decltype(e.detail_)>::entity;
         using Ns = std::make_index_sequence<Entity::count()>;
         detail::for_each_entity_impl<Entity>(Ns{}, std::forward<F>(f));
     }
@@ -59,7 +58,7 @@ namespace ndb
     {
         for_each_entity(DB_Entity{}, std::forward<F>(f));
     }
-} // nse
+} // ndb
 
 /*
 namespace graphic {

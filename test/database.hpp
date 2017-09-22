@@ -6,54 +6,55 @@
 namespace db
 {
     using ndb::field;
+    using ndb::table;
 
     namespace tables
     {
         struct author : ndb::table
         {
-            using name = field<char, 255>;
-            using lastname = field<char, 255>;
+            using Name = field<char, 255>;
+            using Lastname = field<char, 255>;
 
-            using detail_ = ndb::detail_table<
-                ndb::entity<name, lastname>
+            using Detail_ = table::detail<
+                ndb::entity<Name, Lastname>
             >;
-            static constexpr detail_ detail{"author"};
+            static constexpr Detail_ detail_{"author"};
         };
 
         struct movie : ndb::table
         {
-            using id = field<int>;
-            using name = field<char, 255>;
-            using author = field<tables::author>;
+            using Id = field<int>;
+            using Name = field<char, 255>;
+            using Author = field<tables::author>;
             // using author = field<tables::author, option::many>;
 
-            using detail_ = ndb::detail_table<
-                ndb::entity<id, name, author>
+            using Detail_ = table::detail<
+                ndb::entity<Id, Name, Author>
             >;
-            static constexpr detail_ detail{"movie"};
+            static constexpr Detail_ detail_{"movie"};
         };
 
         struct sound : ndb::table
         {
-            using id = field<int>;
-            using author = field<tables::author>;
+            using Id = field<int>;
+            using Name = field<char, 255>;
+            using Author = field<tables::author>;
 
-            using detail_ = ndb::detail_table<
-                ndb::entity<id, author>
+            using Detail_ = table::detail<
+                ndb::entity<Id, Name, Author>
             >;
-            static constexpr detail_ detail{"sound"};
+            static constexpr Detail_ detail_{"sound"};
         };
     } // tables
 
-    struct library : ndb::model
+    struct Library : ndb::model
     {
-        using movie = tables::movie;
-        using sound = tables::sound;
+        using Movie = tables::movie;
+        using Sound = tables::sound;
 
-        using detail_= ndb::detail_table<
-            ndb::entity<movie, sound>
+        using Detail_= table::detail<
+            ndb::entity<Movie, Sound>
         >;
-        static constexpr detail_ detail{"library"};
+        static constexpr Detail_ detail_{"library"};
     };
-
 } // db

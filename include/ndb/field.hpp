@@ -1,56 +1,6 @@
 #ifndef FIELD_H_NDB
 #define FIELD_H_NDB
 
-#include <nse/type.hpp>
-#include <ndb/table.hpp>
-#include <ndb/utility.hpp>
-
-namespace ndb
-{
-    //TODO : Ajouter le detail_table::size dans le field_table (les champs où on stock des tables)
-
-    // base field
-    struct field_base {};
-
-    //detail_field
-    template<std::size_t Size, typename... Options>
-    struct detail_field
-    {
-        static constexpr size_t size = Size + sizeof...(Options);
-    };
-
-    // static field
-    template<class T, size_t Size = sizeof(T), class = void>
-    struct field : field_base
-    {
-        using type = T;
-
-        static constexpr size_t size = Size;
-        using detail_ = detail_field<Size>;
-    };
-
-    // dynamic field
-    template<class T, size_t Size>
-    struct field<T*, Size>
-    {
-        using type = T*;
-
-        static constexpr size_t size = sizeof(size_t);
-        using detail_ = detail_field<Size>;
-    };
-
-    // field link
-    template<class T, size_t Size>
-    struct field<T, Size, typename std::enable_if_t<ndb::is_table<T>>>
-    {
-        static constexpr size_t size = sizeof(size_t);
-        using detail_ = detail_field<Size>;
-    };
-
-} // ndb
-
-#endif // FIELD_H_NDB
-
 /*! \class field can be static or dynamic, data will be stored in static or dynamic section of a table
  * Size is the space required for a field, it will be dynamic for dynamic fields
  *
@@ -60,3 +10,58 @@ namespace ndb
  * field<dynamic_size_object*>
  * field<dynamic_size_object_with_static_capacity*, 5000>
  */
+
+#include <ndb/table.hpp>
+#include <ndb/utility.hpp>
+
+namespace ndb
+{
+    struct field_base {};
+
+    template<std::size_t Size>
+    struct common_field
+    {
+        template<std::size_t Size, typename... Options>
+        struct detail
+        {
+            static constexpr size_t size = Size + sizeof...(Options);
+        };
+
+        using Detail_ = detail<Size>;
+
+        static constexpr Detail_ detail_{};
+    };
+
+    // static field
+    template<class T, size_t Size = sizeof(T), class = void>
+    struct field : common_field<Size>, field_base
+    {
+        using type = T;
+
+        using common_field::Detail_;
+    };
+
+    // dynamic field
+    template<class T, size_t Size>
+    struct field<T*, Size> : common_field<sizeof(size_t)>, field_base
+    {
+        using type = T*;
+
+        using common_field::Detail_;
+    };
+
+    // field link
+    template<class T, size_t Size>
+    struct field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : common_field<sizeof(size_t)>, field_base
+    {
+        using type = T;
+
+        using common_field::Detail_;
+    };
+
+    //TODO: separate spe for field_link_id and field_link_table field<movie> field<movie, option::many>
+    // TODO: field options
+
+} // ndb
+
+#endif // FIELD_H_NDB

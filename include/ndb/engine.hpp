@@ -1,6 +1,8 @@
 #ifndef ENGINE_ENGINE_H_NDB
 #define ENGINE_ENGINE_H_NDB
 
+//! \brief base class for engines
+
 #include <ndb/engine/setup.hpp>
 #include <ndb/model.hpp>
 

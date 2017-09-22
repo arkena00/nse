@@ -1,6 +1,18 @@
 #ifndef MODEL_H_NDB
 #define MODEL_H_NDB
 
+//! see later
+
+namespace ndb
+{
+    struct model
+    {
+
+    };
+}
+
+/*
+
 #include <array>
 #include <type_traits>
 #include <ndb/table.hpp>
@@ -8,30 +20,6 @@
 
 namespace ndb
 {
-    class model
-    {
-
-    };
-
-    struct generic_model_entity
-    {
-        using id = uint8_t;
-        using type_id = uint8_t;
-        using count_type = uint8_t;
-
-        enum code : uint8_t
-        {
-            end = 0,
-            table = 200,
-            table_field_array,
-            table_field_link,
-            table_option,
-            field
-        };
-    };
-
-
-
     template<class Entity>
     int generic_model_code()
     {
@@ -44,12 +32,15 @@ namespace ndb
     namespace trait
     {
         template<class DB_Entity>
-        struct array_size_for_impl {
+        struct array_size_for_impl
+        {
             using type = std::integral_constant<std::size_t, DB_Entity::size()>;
         };
+
         template<class Model>
-        struct array_size_for {
-            using type = typename array_size_for_impl<typename Model::detail_::entity>::type;
+        struct array_size_for
+        {
+            using type = typename array_size_for_impl<typename Model::Detail_::entity>::type;
         };
     } // trait
 
@@ -74,5 +65,7 @@ namespace ndb
     };
 
 } // ndb
+
+ */
 
 #endif // ENTITY_H_NDB

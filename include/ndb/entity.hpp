@@ -1,6 +1,8 @@
 #ifndef ENTITY_H_NDB
 #define ENTITY_H_NDB
 
+//! \brief represent a database entity
+
 #include <type_traits>
 #include <utility>
 #include <cstddef>
@@ -24,7 +26,7 @@ namespace ndb
         {
             std::size_t sum = 0;
             using expand = std::size_t[];
-            (void)expand{(sum += Ts::detail_::size)...};
+            (void)expand{(sum += Ts::Detail_::size)...};
             return sum;
         }
 
