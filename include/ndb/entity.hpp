@@ -4,6 +4,7 @@
 //! \brief represent a database entity
 
 #include <type_traits>
+#include <tuple>
 #include <utility>
 #include <cstddef>
 #include <ndb/utility.hpp>

@@ -3,6 +3,8 @@
 
 //! \brief table for database model
 
+#include <cstddef>
+
 namespace ndb
 {
     class table

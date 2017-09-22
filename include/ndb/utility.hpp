@@ -8,6 +8,9 @@
 
 namespace ndb
 {
+    class table;
+    class field_base;
+
     namespace detail
     {
         // call f for each type

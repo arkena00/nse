@@ -23,6 +23,17 @@
  *
  */
 
+/*! FIELD TYPES
+ * field_link_id : link table line to 1 line from foreign table
+ * Table_zeta
+ * Table || id | name | Table_zeta_id | ...
+ *
+ * field_link_table : link table line to many line from foreign table
+ * Table_zeta || id | ...
+ * Table || id | ...
+ * Link_Table_Table_zera || Table_id | Table_zeta_id
+ */
+
 // idea
 // homogeneous table
 /* add entity to each table on table.add

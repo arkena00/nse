@@ -2,7 +2,6 @@
 #include <ndb/engine/sql/sql.hpp>
 #include "database.hpp"
 
-
 int main()
 {
     ndb::engine<>::make<db::Library>();
