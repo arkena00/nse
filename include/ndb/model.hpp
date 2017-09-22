@@ -44,7 +44,7 @@ namespace ndb
         };
     } // trait
 
-    template<std::size_t ModelSize>
+    template<class Model>
     class generic_model
     {
     public:
@@ -61,7 +61,7 @@ namespace ndb
         }
 
     private:
-        std::array<char, ModelSize> array_ {};
+        std::array<char, trait::array_size_for<Model>::type::value> array_ {};
     };
 
 } // ndb
