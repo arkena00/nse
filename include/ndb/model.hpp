@@ -5,7 +5,7 @@
 
 namespace ndb
 {
-    struct model
+    class model
     {
 
     };
