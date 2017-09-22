@@ -4,6 +4,7 @@
 //! \brief utility functions
 
 #include <utility>
+#include "ndb/table.hpp"
 #include <iostream>
 
 namespace ndb
@@ -26,6 +27,9 @@ namespace ndb
             (void)expand{((void)std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, typename Entity::template type_at<Ns>{}), 0)...};
         }
     } // detail
+
+    //Create base field here
+    struct field_base {};
 
     template<class T>
     static constexpr bool is_table = std::is_base_of<ndb::table, T>::value;
