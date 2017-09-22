@@ -62,10 +62,10 @@ namespace ndb
         using typename common_field<sizeof(size_t)>::Detail_;
     };
 
-    template<typename T, typename Size>
+    template<typename T, size_t Size = sizeof(T)>
     using field_link_id = field<T, Size>;
 
-    template<typename T, typename Size>
+    template<typename T, size_t Size = sizeof(T)>
     using field_link_table = field<T, Size>;
 
     //TODO: separate spe for field_link_id and field_link_table field<movie> field<movie, option::many>
