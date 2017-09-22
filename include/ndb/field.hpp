@@ -54,19 +54,20 @@ namespace ndb
 
     // field link
     template<class T, size_t Size>
-    class field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(size_t)>, field_base
+    class field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(T) * Size>, field_base
     {
     public:
         using type = T;
-
-        using typename common_field<sizeof(size_t)>::Detail_;
+        using typename common_field<sizeof(T) * Size>::Detail_;
     };
 
-    template<typename T, size_t Size = sizeof(T)>
-    using field_link_id = field<T, Size>;
-
-    template<typename T, size_t Size = sizeof(T)>
-    using field_link_table = field<T, Size>;
+    template<class T>
+    class field<T, 0, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(size_t)>, field_base
+    {
+    public:
+        using type = T;
+        using typename common_field<sizeof(size_t)>::Detail_;
+    };
 
     //TODO: separate spe for field_link_id and field_link_table field<movie> field<movie, option::many>
     // TODO: field options
