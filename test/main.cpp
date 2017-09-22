@@ -33,17 +33,17 @@ int main()
     std::cout << "\n" << table_test::user::offset<1>();
     std::cout << "\n" << table_test::user::offset<2>();
 
-    ndb::for_each_entity<db::library>([](auto&& index, auto&& table) {
-        std::cout << "\ntable : " << index << " : " << table.detail.name;
+    ndb::for_each_entity<db::Library>([](auto&& index, auto&& table) {
+        std::cout << "\ntable : " << index << " : " << table.detail_.name;
 
         ndb::for_each_entity(table, [](auto&& i, auto&& field)
         {
-          std::cout << "\nindex : " << i << " : " << field.size;
+          std::cout << "\nindex : " << i << " : " << field.detail_.size;
         });
     });
 
-    std::cout << "\n" << ndb::trait::array_size_for<db::library>::type::value;
-    std::cout << "\n" << ndb::trait::array_size_for<db::library::movie>::type::value;
-    std::cout << "\n" << ndb::trait::array_size_for<db::library::sound>::type::value;
+    /* std::cout << "\n" << ndb::trait::array_size_for<db::Library>::type::value;
+    std::cout << "\n" << ndb::trait::array_size_for<db::Library::Movie>::type::value;
+    std::cout << "\n" << ndb::trait::array_size_for<db::Library::Sound>::type::value; */
     return 0;
 }

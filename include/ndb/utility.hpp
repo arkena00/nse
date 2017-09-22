@@ -6,6 +6,15 @@
 #include <utility>
 #include <iostream>
 
+/*
+ * Forward declarations
+ */
+namespace ndb
+{
+    struct field_base;
+    class table;
+}
+
 namespace ndb
 {
     class table;
