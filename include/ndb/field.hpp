@@ -16,6 +16,9 @@
 
 namespace ndb
 {
+    //Create base field here
+    struct field_base {};
+
     template<std::size_t Size, typename... Options>
     struct common_field
     {
@@ -36,7 +39,7 @@ namespace ndb
         using type = T;
 
         using typename common_field<Size>::Detail_;
-        static constexpr size_t size = Detail_::size;
+        //static constexpr size_t size = Detail_::size;
     };
 
     // dynamic field
@@ -55,11 +58,11 @@ namespace ndb
         using type = T;
 
         using typename common_field<sizeof(size_t)>::Detail_;
-        static constexpr size_t size = Detail_::size;
+        //static constexpr size_t size = Detail_::size;
     };
 
     //TODO: separate spe for field_link_id and field_link_table field<movie> field<movie, option::many>
-    // TODO: field options
+    //TODO: field options
 
 } // ndb
 

@@ -38,7 +38,7 @@ namespace ndb
             ndb::for_each<Ts...>([&sum](auto&& index, auto&& item)
             {
                 if (index >= N) return;
-                sum += item.size;
+                sum += item.detail_.size;
             });
             return sum;
         }
