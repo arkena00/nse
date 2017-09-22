@@ -16,11 +16,12 @@
 
 namespace ndb
 {
-    struct field_base {};
+    class field_base {};
 
     template<std::size_t Size, class... Option>
-    struct common_field
+    class common_field
     {
+    public:
         struct detail
         {
             static constexpr size_t size = Size + sizeof...(Option);
@@ -33,8 +34,9 @@ namespace ndb
 
     // static field
     template<class T, size_t Size = sizeof(T), class = void>
-    struct field : common_field<Size>, field_base
+    class field : public common_field<Size>, field_base
     {
+    public:
         using type = T;
 
         using common_field<Size>::Detail_;
@@ -42,8 +44,9 @@ namespace ndb
 
     // dynamic field
     template<class T, size_t Size>
-    struct field<T*, Size> : common_field<sizeof(size_t)>, field_base
+    class field<T*, Size> : public common_field<sizeof(size_t)>, field_base
     {
+    public:
         using type = T*;
 
         using common_field<Size>::Detail_;
@@ -51,8 +54,9 @@ namespace ndb
 
     // field link
     template<class T, size_t Size>
-    struct field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : common_field<sizeof(size_t)>, field_base
+    class field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(size_t)>, field_base
     {
+    public:
         using type = T;
 
         using common_field<sizeof(size_t)>::Detail_;

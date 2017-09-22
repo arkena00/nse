@@ -11,7 +11,7 @@
  */
 namespace ndb
 {
-    struct field_base;
+    class field_base;
     class table;
 }
 
