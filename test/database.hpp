@@ -22,7 +22,8 @@ namespace db
 
         struct movie : ndb::table
         {
-            using id = field<int>;
+            //using id = field<int>;
+            ndb_field(id, int);
             using name = field<char, 255>;
             using author = field<tables::author>;
             // using author = field<tables::author, option::many>;
