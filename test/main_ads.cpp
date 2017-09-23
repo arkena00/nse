@@ -1,6 +1,6 @@
 #include <ndb/engine/nse/nse.hpp>
 #include <ndb/engine/sql/sql.hpp>
-//#include "database.hpp"
+#include "database.hpp"
 
 int main()
 {
@@ -10,6 +10,7 @@ int main()
     {
         //std::cout << "\nindex : " << i << " : " << ndb::is_field<std::decay_t<decltype(field)>>;
     });
+
 
     return 0;
 }

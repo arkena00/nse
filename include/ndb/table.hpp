@@ -16,7 +16,7 @@ namespace ndb
             using entity = Entity;
 
             const char* const name;
-            constexpr detail(const char* n) : name{n} { }
+            constexpr explicit detail(const char* n) : name{n} { }
             static constexpr std::size_t size = Entity::size() + sizeof...(Options);
         };
     };

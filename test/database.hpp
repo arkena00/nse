@@ -1,3 +1,6 @@
+#ifndef TEST_DATABASE_H_NDB
+#define TEST_DATABASE_H_NDB
+
 #include <ndb/model.hpp>
 #include <ndb/table.hpp>
 #include <ndb/field.hpp>
@@ -34,8 +37,7 @@ namespace db
         {
             using Id = field<int>;
             using Name = field<char, 255>;
-            using Author = field<tables::author>;
-            // using author = field<tables::author, option::many>;
+            using Author = field<tables::author, 7>;
 
             using Detail_ = table::detail<
                 ndb::entity<Id, Name, Author>
@@ -60,10 +62,13 @@ namespace db
     {
         using Movie = tables::movie;
         using Sound = tables::sound;
+        using Author = tables::author;
 
         using Detail_= table::detail<
-            ndb::entity<Movie, Sound>
+            ndb::entity<Movie, Sound, Author>
         >;
         static constexpr Detail_ detail_{"library"};
     };
 } // db
+
+#endif // TEST_DATABASE_H_NDB

@@ -17,6 +17,15 @@
 namespace ndb
 {
     class field_base {};
+    class field_entity {};
+
+    // default field value : sizeof(T) for static_field, 0 for field_entity
+    template<class T>
+    constexpr auto default_size()
+    {
+        if constexpr(ndb::is_table<T>) return 0;
+        else return sizeof(T);
+    }
 
     // common field
     template<std::size_t Size, class... Option>
@@ -29,17 +38,15 @@ namespace ndb
         };
 
         using Detail_ = detail;
-
         static constexpr Detail_ detail_{};
     };
 
     // static field
-    template<class T, size_t Size = sizeof(T), class = void>
+    template<class T, size_t Size = default_size<T>(), class = void>
     class field : public common_field<Size>, field_base
     {
     public:
         using type = T;
-
         using typename common_field<Size>::Detail_;
     };
 
@@ -49,30 +56,18 @@ namespace ndb
     {
     public:
         using type = T*;
-
         using typename common_field<Size>::Detail_;
     };
 
-    // field link
-    template<class T, size_t Size>
-    class field<T, Size, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(T) * Size>, field_base
+    // field entity
+    template<class T, size_t Entity_count>
+    class field<T, Entity_count, typename std::enable_if_t<ndb::is_table<T>>> :
+        public common_field<Entity_count>, field_base, field_entity
     {
     public:
         using type = T;
-        using typename common_field<sizeof(T) * Size>::Detail_;
+        using typename common_field<Entity_count>::Detail_;
     };
-
-    template<class T>
-    class field<T, 0, typename std::enable_if_t<ndb::is_table<T>>> : public common_field<sizeof(size_t)>, field_base
-    {
-    public:
-        using type = T;
-        using typename common_field<sizeof(size_t)>::Detail_;
-    };
-
-    //TODO: separate spe for field_link_id and field_link_table field<movie> field<movie, option::many>
-    // TODO: field options
-
 } // ndb
 
 #endif // FIELD_H_NDB

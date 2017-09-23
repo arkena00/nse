@@ -10,6 +10,7 @@ namespace ndb
 {
     class table;
     class field_base;
+    class field_entity;
 
     namespace detail
     {
@@ -18,7 +19,7 @@ namespace ndb
         void for_each_impl(std::index_sequence<Ns...>, F&& f)
         {
             using expand = int[];
-            (void)expand{(std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, Ts{}), 0)...};
+            (void)expand{1, (std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, Ts{}), 0)...};
         }
 
         // call f for each table or field
@@ -26,7 +27,7 @@ namespace ndb
         void for_each_entity_impl(std::index_sequence<Ns...>&&, F&& f)
         {
             using expand = int[];
-            (void)expand{((void)std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, typename Entity::template type_at<Ns>{}), 0)...};
+            (void)expand{1, ((void)std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, typename Entity::template type_at<Ns>{}), 0)...};
         }
     } // detail
 
@@ -39,8 +40,8 @@ namespace ndb
     template<class T>
     static constexpr bool is_field_entity = std::is_base_of<ndb::table, typename T::type>::value;
 
-    // TODO:
-    //static constexpr bool is_field_link_table = std::is_base_of<ndb::field_base, T>::value;
+    template<class T>
+    static constexpr bool is_field_entity_vector = is_field_entity<T> && (typename T{}.detail_.size == 0);
 
     template<class... Ts, class F>
     void for_each(F&& f)
