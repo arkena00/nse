@@ -41,7 +41,7 @@ namespace ndb
     static constexpr bool is_field_entity = std::is_base_of<ndb::table, typename T::type>::value;
 
     template<class T>
-    static constexpr bool is_field_entity_vector = is_field_entity<T> && (typename T{}.detail_.size == 0);
+    static constexpr bool is_field_entity_vector = is_field_entity<T> && T{}.detail_.size == 0;
 
     template<class... Ts, class F>
     void for_each(F&& f)
