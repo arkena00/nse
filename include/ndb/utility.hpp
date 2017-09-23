@@ -36,8 +36,8 @@ namespace ndb
     template<class T>
     static constexpr bool is_field = std::is_base_of<ndb::field_base, T>::value;
 
-    // TODO:
-    //static constexpr bool is_field_link_id = std::is_base_of<ndb::field_base, T>::value;
+    template<class T>
+    static constexpr bool is_field_entity = std::is_base_of<ndb::table, typename T::type>::value;
 
     // TODO:
     //static constexpr bool is_field_link_table = std::is_base_of<ndb::field_base, T>::value;

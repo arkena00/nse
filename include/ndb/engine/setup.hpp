@@ -14,7 +14,7 @@ namespace ndb
     template<>
     struct setup<>
     {
-        using engine = nse;
+        using engine = sql;
     };
 
     template<class Engine = setup<>::engine> class engine;

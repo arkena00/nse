@@ -18,6 +18,7 @@ namespace ndb
 {
     class field_base {};
 
+    // common field
     template<std::size_t Size, class... Option>
     class common_field
     {

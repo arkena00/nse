@@ -8,7 +8,7 @@ int main()
 
     ndb::for_each_entity<db::Library::Movie>([](auto&& i, auto&& field)
     {
-        std::cout << "\nindex : " << i << " : " << ndb::is_field<std::decay_t<decltype(field)>>;
+        //std::cout << "\nindex : " << i << " : " << ndb::is_field<std::decay_t<decltype(field)>>;
     });
 
     return 0;
