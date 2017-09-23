@@ -17,7 +17,6 @@
 namespace ndb
 {
     class field_base {};
-    class field_entity {};
 
     // default field value : sizeof(T) for static_field, 0 for field_entity
     template<class T>
@@ -62,7 +61,7 @@ namespace ndb
     // field entity
     template<class T, size_t Entity_count>
     class field<T, Entity_count, typename std::enable_if_t<ndb::is_table<T>>> :
-        public common_field<Entity_count>, field_base, field_entity
+        public common_field<Entity_count>, field_base
     {
     public:
         using type = T;

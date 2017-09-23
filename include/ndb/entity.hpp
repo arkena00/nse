@@ -36,10 +36,10 @@ namespace ndb
         {
             static_assert(N < sizeof...(Ts), "Error : Index is higher than parameter pack");
             std::size_t sum = 0;
-            ndb::for_each<Ts...>([&sum](auto&& index, auto&& item)
+            ndb::for_each<Ts...>([&sum](auto&& index, auto&& field)
             {
                 if (index >= N) return;
-                sum += item.detail_.size;
+                sum += field.detail_.size;
             });
             return sum;
         }

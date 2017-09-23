@@ -29,6 +29,14 @@ namespace ndb
             using expand = int[];
             (void)expand{1, ((void)std::forward<F>(f)(std::integral_constant<std::size_t, Ns>{}, typename Entity::template type_at<Ns>{}), 0)...};
         }
+
+        // call f for each arg
+        template<std::size_t... N, class F, class... Ts>
+        void for_each_impl(std::index_sequence<N...>, F&& f, Ts&&... args)
+        {
+            using expand = int[];
+            (void)expand{((void)std::forward<F>(f)(std::integral_constant<std::size_t, N>{}, std::forward<Ts>(args)), 0)...};
+        }
     } // detail
 
     template<class T>
@@ -41,14 +49,16 @@ namespace ndb
     static constexpr bool is_field_entity = std::is_base_of<ndb::table, typename T::type>::value;
 
     template<class T>
-    static constexpr bool is_field_entity_vector = is_field_entity<T> && (typename T{}.detail_.size == 0);
+    static constexpr bool is_field_entity_vector = is_field_entity<T> && (T{}.detail_.size == 0);
 
+    // for each on pack type
     template<class... Ts, class F>
     void for_each(F&& f)
     {
         detail::for_each_impl<Ts...>(std::index_sequence_for<Ts...>{}, std::forward<F>(f));
     }
 
+    // for_each on model entity
     template<class DB_Entity, class F>
     void for_each_entity(DB_Entity&& e, F&& f)
     {
@@ -57,27 +67,19 @@ namespace ndb
         detail::for_each_entity_impl<Entity>(Ns{}, std::forward<F>(f));
     }
 
+    // for each on model entity
     template<class DB_Entity, class F>
     void for_each_entity(F&& f)
     {
         for_each_entity(DB_Entity{}, std::forward<F>(f));
     }
+
+    // for each on arguments
+    template<class F, class... Ts>
+    void for_each(F&& f, Ts&&... args)
+    {
+        detail::for_each_impl(std::index_sequence_for<Ts...>{}, std::forward<F>(f), std::forward<Ts>(args)...);
+    }
 } // ndb
 
-/*
-namespace graphic {
-    inline std::ostream &operator<<(std::ostream &os, char c) {
-        return os << (std::is_signed<char>::value ? static_cast<int>(c)
-                                                  : static_cast<unsigned int>(c));
-    }
-
-    inline std::ostream &operator<<(std::ostream &os, signed char c) {
-        return os << static_cast<int>(c);
-    }
-
-    inline std::ostream &operator<<(std::ostream &os, unsigned char c) {
-        return os << static_cast<unsigned int>(c);
-    }
-} // graphic
-*/
 #endif // UTILITY_H_NSE
