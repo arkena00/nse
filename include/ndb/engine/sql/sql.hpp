@@ -12,7 +12,7 @@ namespace ndb
     {
     public:
         template<class Model>
-        static constexpr void make()
+        static void make()
         {
             std::string output;
 
@@ -26,7 +26,7 @@ namespace ndb
                     if (ndb::is_field_entity<std::decay_t<decltype(field)>>)
                     {
                         using Z = typename std::decay_t<decltype(field)>::type;
-                        Z z;
+                        //Z z;
                         std::cout << std::is_same<db::tables::author, Z>::value;
                         //output += " ENTITY FIELD FROM " + z.detail_.name;
                     }

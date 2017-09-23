@@ -1,6 +1,6 @@
 #include <ndb/engine/nse/nse.hpp>
 #include <ndb/engine/sql/sql.hpp>
-#include "database.hpp"
+//#include "database.hpp"
 
 int main()
 {
