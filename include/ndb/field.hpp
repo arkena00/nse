@@ -19,6 +19,7 @@ namespace ndb
 {
     class field_base
     {
+    public:
         template<size_t Size>
         struct size
         {

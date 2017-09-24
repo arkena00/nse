@@ -22,12 +22,12 @@ namespace nse
         {
             ndb::for_each([&offset, &block](auto&& Index, auto&& value)
             {
-                offset +=  Entity::offset<decltype(Index){}>();
+                offset +=  Entity::template offset<decltype(Index){}>();
                 // value is fundamental
                 //if constexpr (std::is_fundamental<decltype(value)>::value)
                 {
                     // check if value can be store in field
-                    static_assert(sizeof(value) <= Entity::item_size<decltype(Index){}>());
+                    static_assert(sizeof(value) <= Entity::template item_size<decltype(Index){}>());
                     block.write(offset, reinterpret_cast<const char*>(&value), sizeof(value));
                 }
             }, values...);
