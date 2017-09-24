@@ -3,6 +3,7 @@
 
 #include <nse/io_access.hpp>
 #include <nse/dynamic_block.hpp>
+#include <nse/io.hpp>
 
 namespace nse
 {
@@ -14,19 +15,16 @@ namespace nse
 
         table() {}
 
-
-        void add(const Entity& entity) {}
-
+        // add new entity with specified values
         template<class... Ts>
-        void add(Ts&&... args)
+        void add(Ts&&... values)
         {
+            // check if value pack can be store in entity
+            static_assert(sizeof...(Ts) <= Entity::count()); // too many values for entity
             // add entity at end of buffer
-
-            ndb::for_each([this](auto&& Index, auto&& arg)
-            {
-                auto offset = buffer_.size();
-                buffer_.write(offset + Entity::offset<decltype(Index){}>(), reinterpret_cast<const char*>(&arg), sizeof(arg));
-            }, args...);
+            auto offset = buffer_.size();
+            // write new entity
+            io::write<Entity>(buffer_, offset, values...);
         }
 
         void del(size_t index) {}

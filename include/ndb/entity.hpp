@@ -31,6 +31,12 @@ namespace ndb
             return sum;
         }
 
+        template<size_t N>
+        static constexpr auto item_size()
+        {
+            return type_at<N>{}.detail_.size;
+        }
+
         template<std::size_t N>
         static constexpr auto offset()
         {

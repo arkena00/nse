@@ -49,7 +49,7 @@ namespace nse
             return data_size_;
         }
 
-        constexpr size_t capacity() const override
+        size_t capacity() const override
         {
             return Capacity;
         }

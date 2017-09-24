@@ -28,8 +28,9 @@ namespace graphic
 
 namespace nse
 {
-    struct debug
+    class debug
     {
+    public:
         static void display(block_base& buf, size_t split = 0)
         {
             std::cout << "\n////////////////////////////////  BLOCK";
