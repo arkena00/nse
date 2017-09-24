@@ -15,19 +15,22 @@
 #define ndb_field(...) ndb_field_chooser(__VA_ARGS__)(__VA_ARGS__)
 */
 
+/*
 namespace db
 {
     using ndb::field;
     using ndb::table;
-    using ndb::option;
-    using ndb::field_option;
-    using ndb::size;
+    using option_code = ndb::field_base::option_code;
+    template<size_t Size>
+    using size = ndb::field_base::size<Size>;
+    template<option_code Code>
+    using option = ndb::field_base::option<Code>;
 
     namespace tables
     {
         struct author : ndb::table
         {
-            using Name = field<char, size<33>, option<field_option::unique | field_option::autoincrement>>;
+            using Name = field<char, size<33>, option<option_code::unique | option_code::autoincrement>>;
             using Lastname = field<char, size<255>>;
 
             using Detail_ = table::detail<
@@ -73,5 +76,5 @@ namespace db
         static constexpr Detail_ detail_{"library"};
     };
 } // db
-
+*/
 #endif // TEST_DATABASE_H_NDB
