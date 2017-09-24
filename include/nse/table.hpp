@@ -25,7 +25,7 @@ namespace nse
             ndb::for_each([this](auto&& Index, auto&& arg)
             {
                 auto offset = buffer_.size();
-                //buffer_.write(offset + Entity::offset<decltype(Index){}>(), reinterpret_cast<const char*>(&arg), sizeof(arg));
+                buffer_.write(offset + Entity::offset<decltype(Index){}>(), reinterpret_cast<const char*>(&arg), sizeof(arg));
             }, args...);
         }
 

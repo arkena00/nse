@@ -3,11 +3,12 @@
 #include "database.hpp"
 
 #include <nse/table.hpp>
+#include <nse/debug.hpp>
 
 struct zeta : ndb::table
 {
-    using Id = ndb::field<int>;
-    using Name = ndb::field<char, 6>;
+    using Id = ndb::field<char>;
+    using Name = ndb::field<char>;
 
     using Detail_ = ndb::table::detail<
     ndb::entity<Id, Name>
@@ -21,9 +22,9 @@ int main()
 
     nse::table<zeta> table;
 
-    table.add(3, 5);
+    table.add('a', 'b');
 
-    table.buffer_.debug();
+    nse::debug::display(table.buffer_);
 
     return 0;
 }
