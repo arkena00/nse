@@ -2,13 +2,13 @@
 project(nse)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 # specifi compiler options
 if (MSVC)
-    add_compile_options("/std:c++latest")
+    add_compile_options(/wd4710 /std:c++latest)
 else()
     SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++1z" )
 endif()

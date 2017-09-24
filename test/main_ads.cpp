@@ -2,15 +2,29 @@
 #include <ndb/engine/sql/sql.hpp>
 #include "database.hpp"
 
+#include <nse/table.hpp>
+#include <nse/debug.hpp>
+
+struct zeta : ndb::table
+{
+    using Id = ndb::field<char>;
+    using Name = ndb::field<char>;
+
+    using Detail_ = ndb::table::detail<
+    ndb::entity<Id, Name>
+    >;
+    static constexpr Detail_ detail_{"movie"};
+};
+
 int main()
 {
-    ndb::engine<>::make<db::Library>();
+    //ndb::engine<>::make<db::Library>();
 
-    ndb::for_each_entity<db::Library::Movie>([](auto&& i, auto&& field)
-    {
-        //std::cout << "\nindex : " << i << " : " << ndb::is_field<std::decay_t<decltype(field)>>;
-    });
+    nse::table<zeta> table;
 
+    table.add('a', 'b');
+
+    nse::debug::display(table.buffer_);
 
     return 0;
 }
