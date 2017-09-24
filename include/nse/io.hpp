@@ -18,18 +18,24 @@ namespace nse
 
         // write entity values into block at offset
         template<class Entity, class... Ts>
-        void write(block_base& block, size_t offset, Ts... values)
+        void write(block_base& block, size_t start_offset, Ts... values)
         {
-            ndb::for_each([&offset, &block](auto&& Index, auto&& value)
+            ndb::for_each([&](auto&& Index, auto&& v)
             {
-                offset +=  Entity::template offset<decltype(Index){}>();
+                using value_type = std::decay_t<decltype(v)>;
+
+                size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
+                size_t item_size = Entity::template item_size<decltype(Index){}>();
+
                 // value is fundamental
-                //if constexpr (std::is_fundamental<decltype(value)>::value)
+                if constexpr (std::is_fundamental<value_type>::value)
                 {
                     // check if value can be store in field
-                    static_assert(sizeof(value) <= Entity::template item_size<decltype(Index){}>());
-                    block.write(offset, reinterpret_cast<const char*>(&value), sizeof(value));
+                    //static_assert(sizeof(value_type) <= Entity::template item_size<decltype(Index){}>());
+                    std::cout << "\n size : " << item_size;
+                    block.write(offset, reinterpret_cast<const char*>(&v), item_size);
                 }
+
             }, values...);
         }
     };

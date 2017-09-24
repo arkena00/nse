@@ -9,8 +9,6 @@ namespace nse
     template<size_t Capacity>
     class dynamic_block : public block_base
     {
-        friend class debug;
-
     public:
         explicit dynamic_block(size_t offset = 0) :
             offset_(offset),
