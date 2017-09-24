@@ -19,13 +19,16 @@ namespace db
 {
     using ndb::field;
     using ndb::table;
+    using ndb::option;
+    using ndb::field_option;
+    using ndb::size;
 
     namespace tables
     {
         struct author : ndb::table
         {
-            using Name = field<char, 255>;
-            using Lastname = field<char, 255>;
+            using Name = field<char, size<33>, option<field_option::unique | field_option::autoincrement>>;
+            using Lastname = field<char, size<255>>;
 
             using Detail_ = table::detail<
                 ndb::entity<Name, Lastname>
@@ -36,8 +39,8 @@ namespace db
         struct movie : ndb::table
         {
             using Id = field<int>;
-            using Name = field<char, 255>;
-            using Author = field<tables::author, 7>;
+            using Name = field<char>;
+            using Author = field<tables::author>;
 
             using Detail_ = table::detail<
                 ndb::entity<Id, Name, Author>
@@ -47,9 +50,9 @@ namespace db
 
         struct sound : ndb::table
         {
-            using Id = field<int>;
-            using Name = field<char, 255>;
-            using Author = field<tables::author>;
+            using Id = field<int, size<8>>;
+            using Name = field<char>;
+            using Author = field<tables::author, size<2000>>;
 
             using Detail_ = table::detail<
                 ndb::entity<Id, Name, Author>

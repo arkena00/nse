@@ -11,6 +11,8 @@ namespace ndb
     class table;
     class field_base;
     class field_entity;
+    class size_base;
+    class option_base;
 
     namespace detail
     {
@@ -42,6 +44,12 @@ namespace ndb
 
     template<class T>
     static constexpr bool is_field_entity_vector = is_field_entity<T> && T{}.detail_.size == 0;
+
+    template<class T>
+    static constexpr bool is_option = std::is_base_of<ndb::option_base, T>::value;
+
+    template<class T>
+    static constexpr bool is_size = std::is_base_of<ndb::size_base, T>::value;
 
     template<class... Ts, class F>
     void for_each(F&& f)
