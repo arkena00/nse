@@ -19,8 +19,10 @@ namespace nse
         template<class... Ts>
         void add(Ts&&... values)
         {
-            // check if value pack can be store in entity
-            static_assert(sizeof...(Ts) <= Entity::count()); // too many values for entity
+            // check if values are set for all fields
+            static_assert(sizeof...(Ts) == Entity::count());
+            // check if buffer can add new entity
+            if (buffer_.size() + Entity::size() > buffer_.capacity()) nse_error << "buffer is full";
             // add entity at end of buffer
             auto offset = buffer_.size();
             // write new entity

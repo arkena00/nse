@@ -34,7 +34,7 @@ namespace nse
         static void display(block_base& buf, size_t split = 0)
         {
             std::cout << "\n////////////////////////////////  BLOCK";
-            std::cout << "\ncapacity : " << buf.size();
+            std::cout << "\ncapacity : " << buf.capacity();
             std::cout << "\ndata_size : " << buf.size();
             std::cout << "\nDATA\n";
             for(size_t i = 0; i < buf.size(); ++i)
@@ -50,8 +50,7 @@ namespace nse
             std::cout << "\nEND\n";
         }
 
-        template<class T>
-        static void display(T& b, size_t split = 0)
+        static void display_file(block_base& b, size_t split = 0)
         {
             std::remove("debug.txt");
             std::fstream fs("debug.txt", std::ios::app | std::ios::out | std::ios::binary);
@@ -59,9 +58,9 @@ namespace nse
             std::string info = "Block info :";
             info += "\ncapacity : " + std::to_string(b.capacity());
             info += "\ndata_size : " + std::to_string(b.size());
-            info += "\nDATA\n";
+            info += "\nDATA";
             fs.write(info.c_str(), info.size());
-            fs.write(b.data_, b.data_size_);
+            fs.write(b.data(), b.size());
         }
     };
 } // nse
