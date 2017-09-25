@@ -35,13 +35,13 @@ namespace nds
     template<>
     void encoder<>::encode(header& in)
     {
-        in.data_.write(0, "45", 2);
+        in.data_.write(0, reinterpret_cast<const char*>(in.entity_count_), Header::item_size<0>());
     }
 
     template<>
     void encoder<>::decode(header& in)
     {
-        in.entity_count_ = reinterpret_cast<size_t>(in.data_.data());
+        in.entity_count_ = reinterpret_cast<Header::item_at<0>::type>(in.data_.data());
     }
 } // nds
 

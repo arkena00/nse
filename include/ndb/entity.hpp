@@ -16,7 +16,7 @@ namespace ndb
     {
     public:
         template<size_t N>
-        using type_at = std::tuple_element_t<N, std::tuple<Ts...>>;
+        using item_at = std::tuple_element_t<N, std::tuple<Ts...>>;
 
         static constexpr auto count()
         {
@@ -34,7 +34,7 @@ namespace ndb
         template<size_t N>
         static constexpr auto item_size()
         {
-            return type_at<N>{}.detail_.size;
+            return item_at<N>{}.detail_.size;
         }
 
         template<std::size_t N>
