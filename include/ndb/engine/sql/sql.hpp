@@ -24,19 +24,19 @@ namespace ndb
                     using F_type = std::decay_t<decltype(field)>;
                     output += "\n\tcreate field : " + std::to_string(field.detail_.size);
                     output += "\n\t\tOptions are : ";
-                    if (field.detail_.isPrimary) {
+                    if (field.detail_.is_primary) {
                         output += "Primary ";
                     }
-                    if (field.detail_.isUnique) {
+                    if (field.detail_.is_unique) {
                         output += "Unique ";
                     }
-                    if (field.detail_.isAutoIncrement) {
+                    if (field.detail_.is_auto_increment) {
                         output += "Auto increment ";
                     }
-                    if (field.detail_.isNotNull) {
+                    if (field.detail_.is_not_null) {
                         output += "Not null ";
                     }
-                    if (!field.detail_.isNotNull && !field.detail_.isAutoIncrement && !field.detail_.isUnique && ! field.detail_.isPrimary) {
+                    if (!field.detail_.is_not_null && !field.detail_.is_auto_increment && !field.detail_.is_unique && ! field.detail_.is_primary) {
                         output += "None.";
                     }
 
