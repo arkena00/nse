@@ -47,10 +47,10 @@ namespace ndb
     public:
         struct detail
         {
-            static constexpr bool is_primary = Option::value & option_code::primary;
-            static constexpr bool is_autoIncrement = Option::value & option_code::autoincrement;
-            static constexpr bool is_unique = Option::value & option_code::unique;
-            static constexpr bool is_not_null = Option::value & option_code::not_null;
+            static constexpr bool is_primary = option_trait::has<field_option::primary, Option>::value;
+            static constexpr bool is_auto_increment = option_trait::has<field_option::autoincrement, Option>::value;
+            static constexpr bool is_unique = option_trait::has<field_option::unique, Option>::value;
+            static constexpr bool is_not_null = option_trait::has<field_option::not_null, Option>::value;
             static constexpr size_t size = Size::size_;
         };
 
@@ -66,61 +66,61 @@ namespace ndb
     // field<T>
     template<class T>
     class field<T, typename std::enable_if_t<!ndb::is_table<T>>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>, field_base
+        public common_field<field_base::size<detail::default_size<T>()>, option<field_option::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<detail::default_size<T>()>, option<field_option::none>>::Detail_;
     };
 
     // field<T, Size>
     template<class T, size_t S>
     class field<T, field_base::size<S>> :
-        public common_field<field_base::size<S>, option<option_code::none>>, field_base
+        public common_field<field_base::size<S>, option<field_option::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<S>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<S>, option<field_option::none>>::Detail_;
     };
 
     // field<T, option>
-    template<class T, option_code Option_code>
-    class field<T, option<Option_code>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<Option_code>>, field_base
+    template<class T, class... Option_code>
+    class field<T, option<Option_code...>> :
+        public common_field<field_base::size<detail::default_size<T>()>, option<Option_code...>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<Option_code>>::Detail_;
+        using typename common_field<field_base::size<detail::default_size<T>()>, option<Option_code...>>::Detail_;
     };
 
     // field<T, Size, Option>
-    template<class T, size_t Size, option_code Option_code>
-    class field<T, field_base::size<Size>, option<Option_code>> :
-        public common_field<field_base::size<Size>, option<Option_code>>, field_base
+    template<class T, size_t Size, class... Option_code>
+    class field<T, field_base::size<Size>, option<Option_code...>> :
+        public common_field<field_base::size<Size>, option<Option_code...>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<Size>, option<Option_code>>::Detail_;
+        using typename common_field<field_base::size<Size>, option<Option_code...>>::Detail_;
     };
 
     // field<table, size>
     template<class T, size_t Size>
     class field<T, typename std::enable_if_t<ndb::is_table<T>>, field_base::size<Size>> :
-        public common_field<field_base::size<Size>, option<option_code::none>>, field_base
+        public common_field<field_base::size<Size>, option<field_option::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<Size>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<Size>, option<field_option::none>>::Detail_;
     };
 
     // field<table>
     template<class T>
     class field<T, typename std::enable_if_t<ndb::is_table<T>>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>, field_base
+        public common_field<field_base::size<detail::default_size<T>()>, option<field_option::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<detail::default_size<T>()>, option<field_option::none>>::Detail_;
     };
 } // ndb
 
