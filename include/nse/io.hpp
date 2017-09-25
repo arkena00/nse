@@ -25,21 +25,23 @@ namespace nse
                 using value_type = std::decay_t<decltype(v)>;
 
                 size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
-                size_t item_size = Entity::template item_size<decltype(Index){}>();
+                constexpr size_t item_size = Entity::template item_size<decltype(Index){}>();
 
                 // value is fundamental
                 if constexpr (std::is_fundamental<value_type>::value)
                 {
                     // check if value can be store in field
-                    //static_assert(sizeof(value_type) <= Entity::template item_size<decltype(Index){}>());
-                    std::cout << "\n size : " << item_size;
+                    static_assert(sizeof(value_type) <= item_size, "field cannot store value");
                     block.write(offset, reinterpret_cast<const char*>(&v), item_size);
+                }
+                else if (std::is_pointer<value_type>::value)
+                {
+                    std::cout << "\npointer";
                 }
 
             }, values...);
         }
-    };
-
+    } // io
 } // nse
 
 #endif // IO_H_NSE

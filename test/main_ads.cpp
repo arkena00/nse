@@ -25,8 +25,10 @@ int main()
     nse::table<zeta> table;
 
     // table.add(4, 'b'); fail
-    table.add(static_cast<char>(68), 'O', (uint16_t)0x6262, 255);
-    table.add('A', 'B', (uint16_t)0x6161, 0);
+    table.add(static_cast<char>(68), 'O', (uint16_t)0x6262, static_cast<int16_t >(256));
+    table.add('A', 'B', (uint16_t)0x6161, (char)5);
+
+    table.sync();
 
     nse::debug::display(table.buffer_);
 

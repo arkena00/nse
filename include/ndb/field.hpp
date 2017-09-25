@@ -66,17 +66,16 @@ namespace ndb
     // field<T>
     template<class T>
     class field<T, typename std::enable_if_t<!ndb::is_table<T>>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>, field_base
+        public common_field<field_base::size<ndb::detail::default_size<T>()>, option<option_code::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<ndb::detail::default_size<T>()>, option<option_code::none>>::Detail_;
     };
 
     // field<T, Size>
     template<class T, size_t S>
-    class field<T, field_base::size<S>> :
-        public common_field<field_base::size<S>, option<option_code::none>>, field_base
+    class field<T, field_base::size<S>> : public common_field<field_base::size<S>, option<option_code::none>>, field_base
     {
     public:
         using type = T;
@@ -86,11 +85,11 @@ namespace ndb
     // field<T, option>
     template<class T, option_code Option_code>
     class field<T, option<Option_code>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<Option_code>>, field_base
+        public common_field<field_base::size<ndb::detail::default_size<T>()>, option<Option_code>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<Option_code>>::Detail_;
+        using typename common_field<field_base::size<ndb::detail::default_size<T>()>, option<Option_code>>::Detail_;
     };
 
     // field<T, Size, Option>
@@ -116,11 +115,11 @@ namespace ndb
     // field<table>
     template<class T>
     class field<T, typename std::enable_if_t<ndb::is_table<T>>> :
-        public common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>, field_base
+        public common_field<field_base::size<ndb::detail::default_size<T>()>, option<option_code::none>>, field_base
     {
     public:
         using type = T;
-        using typename common_field<field_base::size<detail::default_size<T>()>, option<option_code::none>>::Detail_;
+        using typename common_field<field_base::size<ndb::detail::default_size<T>()>, option<option_code::none>>::Detail_;
     };
 } // ndb
 

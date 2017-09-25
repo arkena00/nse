@@ -8,7 +8,7 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 # specifi compiler options
 if (MSVC)
-    add_compile_options(/wd4710 /std:c++latest)
+    add_compile_options(/wd4710 /std:c++latest /we4309)
 else()
     SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++1z" )
 endif()
