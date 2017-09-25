@@ -22,7 +22,7 @@ namespace nse
             drive_accessor() : path_("./")
             {
                 open(static_data_, path_ + "0.nse");
-                open(dynamic_data_, path_ + "0.nse");
+                open(dynamic_data_, path_ + "1.nse");
             }
 
             void write(size_t offset, const char* data, size_t data_size) override

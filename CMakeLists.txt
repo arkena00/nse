@@ -13,7 +13,7 @@ else()
     SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++1z" )
 endif()
 
-include_directories(include)
+include_directories(include ../../nk/nds/include)
 
 file(GLOB_RECURSE SOURCE_LIST "source/*.cpp" "include/*.hpp")
 
