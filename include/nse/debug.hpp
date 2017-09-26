@@ -39,9 +39,9 @@ namespace nse
             std::cout << "\nDATA\n";
             for(size_t i = 0; i < buf.size(); ++i)
             {
-                if (i % split == 0 && split != 0 && i > 0) std::cout << "\n";
+                if (split != 0 && i % split == 0 && i > 0) std::cout << std::endl;
                 using namespace std;
-                uint8_t p = buf.at(i);
+                auto p = static_cast<uint8_t>(buf.at(i));
                 using namespace graphic;
                 if (p < 10) std::cout << "0";
                 if (p < 100) std::cout << "0";

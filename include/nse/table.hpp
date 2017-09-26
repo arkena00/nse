@@ -19,7 +19,7 @@ namespace nse
 
         void entity_add()
         {
-            //entity_count_++;
+            entity_count_++;
         }
 
         size_t entity_count() const { return entity_count_; }
@@ -38,13 +38,13 @@ namespace nds
     template<>
     void encoder<>::encode(nse::header& in)
     {
-        in.data_.write(0, reinterpret_cast<const char*>(in.entity_count_), nse::Header::item_size<0>());
+        in.data_.write(reinterpret_cast<char*>(&in.entity_count_), nse::Header::item_size<0>());
     }
 
     template<>
     void encoder<>::decode(nse::header& in)
     {
-        //in.entity_count_ = reinterpret_cast<nse::Header::item_at<0>::type>(in.data_.data());
+        in.entity_count_ = *(reinterpret_cast<nse::Header::item_at<0>::type*>(in.data_.data()));
     }
 } // nds
 
@@ -59,7 +59,8 @@ namespace nse
 
         table() : buffer_(header_.size())
         {
-            accessor_.read(header_.data(), header_.size());
+            size_t header_status  = accessor_.read(header_.data(), header_.size());
+            if (header_status != 0) nds::encoder<>::decode(header_);
         }
 
         // get entity as block
@@ -95,8 +96,8 @@ namespace nse
 
         void sync()
         {
-            std::cout << header_.entity_count();
             // update header
+            nds::encoder<>::encode(header_);
             accessor_.write(header_.data(), header_.size());
             // write buffer
             accessor_.write(buffer_.data(), buffer_.size(), buffer_.offset());

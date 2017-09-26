@@ -12,7 +12,7 @@ namespace nse
         class accessor_base
         {
         public:
-            virtual void read(char* data, size_t data_size, size_t offset) = 0;
+            virtual size_t read(char* data, size_t data_size, size_t offset) = 0;
             virtual void write(const char* data, size_t data_size, size_t offset) = 0;
         };
 
@@ -27,11 +27,12 @@ namespace nse
                 open(dynamic_data_, path_ + "1.nse");
             }
 
-            void read(char* data, size_t data_size, size_t offset = 0) override
+            size_t read(char* data, size_t data_size, size_t offset = 0) override
             {
                 static_data_.clear();
                 static_data_.seekg(offset);
                 static_data_.read(data, data_size);
+                return static_cast<size_t>(static_data_.gcount());
             }
 
             void write(const char* data, size_t data_size, size_t offset = 0) override
@@ -47,8 +48,10 @@ namespace nse
                 fs.open(path, std::ios::in | std::ios::out | std::ios::binary);
                 if (!fs.is_open())
                 {
+                    // can't open file, try to create
                     fs.open(path, std::ios::out);
-                    if (!fs.is_open()) nse_error << "can't access drive file " + path;
+                    // can't create file
+                    if (!fs.is_open()) nse_error << "can't access drive file " << path;
                     fs.close();
                     fs.open(path, std::ios::in | std::ios::out | std::ios::binary);
                 }

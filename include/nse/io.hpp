@@ -32,7 +32,7 @@ namespace nse
                 {
                     // check if value can be store in field
                     static_assert(sizeof(value_type) <= item_size, "field cannot store value");
-                    block.write(offset, reinterpret_cast<const char*>(&v), item_size);
+                    block.write(reinterpret_cast<const char*>(&v), item_size, offset);
                 }
                 else if (std::is_pointer<value_type>::value)
                 {

@@ -16,7 +16,7 @@ namespace nse
             data_ = data;
         }
 
-        void write(size_t offset, const char* data, size_t data_size) override
+        void write(const char* data, size_t data_size, size_t offset = 0) override
         {
             memcpy(data_.data() + offset, data, data_size);
         }
@@ -28,6 +28,7 @@ namespace nse
 
         char at(size_t index) const override
         {
+            if (index >= size()) nse_error << "index out of range : " << index;
             return data_.at(index);
         }
 

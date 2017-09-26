@@ -25,17 +25,20 @@ int main()
         nse::table<zeta> table;
         std::cout << "count : " << table.header().entity_count();
 
-        auto item = table.get(1);
-        std::cout << "\nITEM : ";
+        auto item = table.get(5);
         nse::debug::display(item);
 
-/*
+        auto item2 = table.get(0);
+        nse::debug::display(item2);
+
+        /*
         table.add(static_cast<uint8_t>(255), (uint16_t) 0x6262, static_cast<int16_t >(256));
         table.add('A', (uint16_t) 0x6161, (char) 5);
         table.add('A', (uint16_t) 0x6161, (char) 5);
         table.add('A', (uint16_t) 0x6161, (char) 5);*/
 
-        table.sync();
+        //table.add((char) 255, (uint16_t) 0x6161, (char) 255);
+        //table.sync();
 
         //nse::debug::display(table.buffer_, zeta::detail_.size);
     }

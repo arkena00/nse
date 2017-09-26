@@ -8,7 +8,7 @@ namespace nse
     class block_base
     {
     public:
-        virtual void write(size_t offset, const char* data, size_t data_size) = 0;
+        virtual void write(const char* data, size_t data_size, size_t offset) = 0;
 
         virtual char* data() = 0;
         virtual char at(size_t index) const = 0;

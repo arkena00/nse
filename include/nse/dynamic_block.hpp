@@ -24,7 +24,7 @@ namespace nse
             delete[] data_;
         }
 
-        void write(size_t offset, const char* data, size_t data_size) override
+        void write(const char* data, size_t data_size, size_t offset) override
         {
             data_size_ += data_size;
             if (data_size_ > size()) nse_error << "memory_block overflow";
@@ -34,6 +34,7 @@ namespace nse
 
         char at(size_t index) const override
         {
+            if (index >= size()) nse_error << "index out of range : " << index;
             return data_[index];
         }
 
