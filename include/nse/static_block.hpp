@@ -21,7 +21,7 @@ namespace nse
             memcpy(data_.data() + offset, data, data_size);
         }
 
-        const char* data() const override
+        char* data() override
         {
             return data_.data();
         }

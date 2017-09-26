@@ -37,7 +37,7 @@ namespace nse
             return data_[index];
         }
 
-        const char* data() const override
+        char* data() override
         {
             return data_;
         }

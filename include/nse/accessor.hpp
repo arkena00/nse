@@ -12,20 +12,29 @@ namespace nse
         class accessor_base
         {
         public:
-            virtual void write(size_t index, const char* data, size_t data_size) = 0;
+            virtual void read(char* data, size_t data_size, size_t offset) = 0;
+            virtual void write(const char* data, size_t data_size, size_t offset) = 0;
         };
 
 
         class drive_accessor : accessor_base
         {
         public:
-            drive_accessor() : path_("./")
+            explicit drive_accessor(const std::string& path = "./database") :
+                path_(path)
             {
                 open(static_data_, path_ + "0.nse");
                 open(dynamic_data_, path_ + "1.nse");
             }
 
-            void write(size_t offset, const char* data, size_t data_size) override
+            void read(char* data, size_t data_size, size_t offset = 0) override
+            {
+                static_data_.clear();
+                static_data_.seekg(offset);
+                static_data_.read(data, data_size);
+            }
+
+            void write(const char* data, size_t data_size, size_t offset = 0) override
             {
                 static_data_.clear();
                 static_data_.seekp(offset);

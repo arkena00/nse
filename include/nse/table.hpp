@@ -7,41 +7,44 @@
 #include <nse/io.hpp>
 #include <nds/encoder.hpp>
 
-
-using Header =  ndb::entity<ndb::field<size_t>, ndb::field<size_t>>;
-
-struct header : Header
+namespace nse
 {
-    template<class> friend class nds::encoder;
-public:
-    header() : entity_count_(0) {}
-
-    void entity_add()
+    using Header =  ndb::entity<ndb::field<size_t>, ndb::field<size_t>>;
+    struct header : Header
     {
-        entity_count_++;
-    }
+        template<class> friend class nds::encoder;
+    public:
+        header() : entity_count_(0)
+        {}
 
-    size_t entity_count() { return entity_count_; }
+        void entity_add()
+        {
+            //entity_count_++;
+        }
 
-    const char* data() { return data_.data(); }
+        size_t entity_count() const { return entity_count_; }
 
-private:
-    nse::static_block<Header::count()> data_;
-    size_t entity_count_;
-};
+        char* data() { return data_.data(); }
+
+    private:
+        nse::static_block<Header::count()> data_;
+        size_t entity_count_;
+    };
+
+}
 
 namespace nds
 {
     template<>
-    void encoder<>::encode(header& in)
+    void encoder<>::encode(nse::header& in)
     {
-        in.data_.write(0, reinterpret_cast<const char*>(in.entity_count_), Header::item_size<0>());
+        in.data_.write(0, reinterpret_cast<const char*>(in.entity_count_), nse::Header::item_size<0>());
     }
 
     template<>
-    void encoder<>::decode(header& in)
+    void encoder<>::decode(nse::header& in)
     {
-        in.entity_count_ = reinterpret_cast<Header::item_at<0>::type>(in.data_.data());
+        //in.entity_count_ = reinterpret_cast<nse::Header::item_at<0>::type>(in.data_.data());
     }
 } // nds
 
@@ -55,7 +58,19 @@ namespace nse
         using Entity = typename Model_table::Detail_::entity;
 
         table() : buffer_(header_.size())
-        {}
+        {
+            accessor_.read(header_.data(), header_.size());
+        }
+
+        // get entity as block
+        static_block<Entity::size()> get(size_t index)
+        {
+            // index out of range
+            if (index >= header_.entity_count()) nse_error << "entity index out of range, index : " << index << ", entity count : " << header_.entity_count();
+            static_block<Entity::size()> buffer;
+            accessor_.read(buffer.data(), buffer.size(), entity_offset(index));
+            return buffer;
+        }
 
         // add new entity with specified values
         template<class... Ts>
@@ -72,10 +87,9 @@ namespace nse
             header_.entity_add();
         }
 
-        constexpr size_t header_size() const { return header_.size(); }
-        size_t entity_offset() const { return header_size(); }
+        constexpr const header& header() const { return header_; }
+        size_t entity_offset() const { return header_.size(); }
         size_t entity_offset(size_t index) const { return entity_offset() + index * Entity::size(); }
-        size_t entity_count() const { return header_.count(); }
 
         void del(size_t index) {}
 
@@ -83,14 +97,14 @@ namespace nse
         {
             std::cout << header_.entity_count();
             // update header
-            accessor_.write(0, header_.data(), header_.size());
+            accessor_.write(header_.data(), header_.size());
             // write buffer
-            accessor_.write(buffer_.offset(), buffer_.data(), buffer_.size());
+            accessor_.write(buffer_.data(), buffer_.size(), buffer_.offset());
         }
 
     public:
         dynamic_block<512> buffer_;
-        header header_;
+        nse::header header_;
         Accessor accessor_;
     };
 } // nse

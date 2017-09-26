@@ -16,7 +16,14 @@ namespace nse
             return message_.c_str();
         }
 
-        error &operator<<(const std::string& data)
+        template<class T, std::enable_if_t<std::is_integral<T>::value, bool> = 0>
+        error& operator<<(T t)
+        {
+            message_ += std::to_string(t);
+            return *this;
+        }
+
+        error& operator<<(const std::string& data)
         {
             message_ += data;
             return *this;

@@ -23,13 +23,21 @@ int main()
     try
     {
         nse::table<zeta> table;
+        std::cout << "count : " << table.header().entity_count();
 
+        auto item = table.get(1);
+        std::cout << "\nITEM : ";
+        nse::debug::display(item);
+
+/*
         table.add(static_cast<uint8_t>(255), (uint16_t) 0x6262, static_cast<int16_t >(256));
         table.add('A', (uint16_t) 0x6161, (char) 5);
+        table.add('A', (uint16_t) 0x6161, (char) 5);
+        table.add('A', (uint16_t) 0x6161, (char) 5);*/
 
         table.sync();
 
-        nse::debug::display(table.buffer_, zeta::detail_.size);
+        //nse::debug::display(table.buffer_, zeta::detail_.size);
     }
     catch (const std::exception& e)
     {
@@ -37,5 +45,7 @@ int main()
     }
     return 0;
 }
+
+
 
 //TODO: trouver un moyen d'inclure seulement <ndb/engine.hpp>, qui incluera le header du engine définis dans le setup
