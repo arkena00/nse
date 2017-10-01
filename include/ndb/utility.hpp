@@ -39,6 +39,13 @@ namespace ndb
             using expand = int[];
             (void)expand{((void)std::forward<F>(f)(std::integral_constant<std::size_t, N>{}, std::forward<Ts>(args)), 0)...};
         }
+
+        // array impl
+        template<class T, class F, size_t... Ns>
+        auto make_array_impl(F&& f, std::index_sequence<Ns...>&&)
+        {
+            return std::array<T, sizeof...(Ns)>{ (T{ f(std::integral_constant<size_t, Ns>{}) })... };
+        }
     } // detail
 
     template<class T>
@@ -87,6 +94,12 @@ namespace ndb
     void for_each(F&& f, Ts&&... args)
     {
         detail::for_each_impl(std::index_sequence_for<Ts...>{}, std::forward<F>(f), std::forward<Ts>(args)...);
+    }
+
+    template<class T, size_t N, class F>
+    auto make_array(F&& f)
+    {
+        return make_array_impl<T>(std::forward<F>(f), std::make_index_sequence<N>{});
     }
 } // ndb
 
