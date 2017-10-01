@@ -4,7 +4,7 @@
 #include <nse/accessor.hpp>
 #include <nse/dynamic_block.hpp>
 #include <nse/static_block.hpp>
-#include <nse/io.hpp>
+#include <nse/debug.hpp>
 #include <nds/encoder.hpp>
 
 namespace nse
@@ -57,18 +57,46 @@ namespace nse
     public:
         using Entity = typename Model_table::Detail_::entity;
 
-        table() : buffer_(header_.size())
+        explicit table(const std::string& name = "main") :
+            accessor_(name),
+            buffer_(header_.size())
         {
             size_t header_status  = accessor_.read(header_.data(), header_.size());
             if (header_status != 0) nds::encoder<>::decode(header_);
         }
 
+        constexpr const header& header() const
+        {
+            return header_;
+        }
+
+        constexpr static size_t entity_size()
+        {
+            return Entity::size();
+        }
+
+        size_t entity_offset() const
+        {
+            return header_.size();
+        }
+
+        size_t entity_offset(size_t index) const
+        {
+            return entity_offset() + index * entity_size();
+        }
+
+        bool buffer_has_entity(size_t index) const
+        {
+            return entity_offset(index) + entity_size() <= buffer_.offset() + buffer_.capacity();
+        }
+
         // get entity as block
-        static_block<Entity::size()> get(size_t index)
+        static_block<table::entity_size()> get(size_t index)
         {
             // index out of range
             if (index >= header_.entity_count()) nse_error << "entity index out of range, index : " << index << ", entity count : " << header_.entity_count();
-            static_block<Entity::size()> buffer;
+            static_block<entity_size()> buffer;
+
             accessor_.read(buffer.data(), buffer.size(), entity_offset(index));
             return buffer;
         }
@@ -79,18 +107,31 @@ namespace nse
         {
             // check if values are set for all fields
             static_assert(sizeof...(Ts) == Entity::count(), "number of value must match number of fields");
-            // check if buffer can add new entity
-            if (buffer_.size() + Entity::size() > buffer_.capacity()) nse_error << "buffer is full";
-            // add entity at end of buffer
-            auto offset = buffer_.size();
-            // write new entity
-            io::write<Entity>(buffer_, offset, values...);
-            header_.entity_add();
-        }
 
-        constexpr const header& header() const { return header_; }
-        size_t entity_offset() const { return header_.size(); }
-        size_t entity_offset(size_t index) const { return entity_offset() + index * Entity::size(); }
+            // write entity
+            nse_debug << "table write at " << entity_offset() + header_.entity_count() * entity_size();
+            accessor_.write<Entity>(entity_offset() + header_.entity_count() * entity_size(), values...);
+            // update header
+            header_.entity_add();
+            nds::encoder<>::encode(header_);
+            accessor_.write(header_.data(), header_.size());
+
+            /*
+            // check if buffer can store new entity
+            if (buffer_.size() + entity_size() > buffer_.capacity())
+            {
+                // sync buffer
+                sync();
+                // reset buffer with new location
+                buffer_.reset(buffer_.offset() + buffer_.size());
+            }
+            // add entity at end of buffer data
+            auto write_offset = buffer_.size();
+            // write new entity
+            io::write<Entity>(buffer_, write_offset, values...);
+             */
+
+        }
 
         void del(size_t index) {}
 
@@ -104,7 +145,7 @@ namespace nse
         }
 
     public:
-        dynamic_block<512> buffer_;
+        dynamic_block<Entity::size() * 5> buffer_;
         nse::header header_;
         Accessor accessor_;
     };

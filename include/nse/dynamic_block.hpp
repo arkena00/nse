@@ -11,8 +11,6 @@ namespace nse
     {
     public:
         explicit dynamic_block(size_t offset = 0) :
-            offset_(offset),
-            write_offset_(0),
             data_(new char[Capacity]),
             data_size_(0)
         {}
@@ -26,10 +24,11 @@ namespace nse
 
         void write(const char* data, size_t data_size, size_t offset) override
         {
+            if (offset + data_size > capacity()) nse_error << "memory_block overflow, capacity : "
+                                                                    << capacity() << ", trying to write at "
+                                                                    << (offset + data_size);
             data_size_ += data_size;
-            if (data_size_ > size()) nse_error << "memory_block overflow";
             memcpy(data_ + offset, data, data_size);
-            write_offset_ = offset + data_size;
         }
 
         char at(size_t index) const override
@@ -53,25 +52,7 @@ namespace nse
             return Capacity;
         }
 
-        size_t write_offset() const
-        {
-            return write_offset_;
-        }
-
-        size_t offset() const
-        {
-            return offset_;
-        }
-
-        void offset_set(const size_t absoluteoffset_)
-        {
-            offset_ = absoluteoffset_;
-        }
-
     private:
-        size_t offset_;
-        size_t write_offset_;
-
         char* data_;
         size_t data_size_;
     };

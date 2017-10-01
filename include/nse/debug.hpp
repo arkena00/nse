@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 
+#define nse_debug std::cout << std::endl
+
 namespace graphic
 {
     inline std::ostream &operator<<(std::ostream &os, char c)
@@ -32,6 +34,21 @@ namespace nse
     {
     public:
         static void display(block_base& buf, size_t split = 0)
+        {
+            for(size_t i = 0; i < buf.size(); ++i)
+            {
+                if (split != 0 && i % split == 0 && i > 0) std::cout << std::endl;
+                using namespace std;
+                auto p = static_cast<uint8_t>(buf.at(i));
+                using namespace graphic;
+                if (p < 10) std::cout << "0";
+                if (p < 100) std::cout << "0";
+                cout << p << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        static void display_info(block_base& buf, size_t split = 0)
         {
             std::cout << "\n////////////////////////////////  BLOCK";
             std::cout << "\ncapacity : " << buf.capacity();
