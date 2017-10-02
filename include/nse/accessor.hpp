@@ -30,7 +30,7 @@ namespace nse
                 open(dynamic_data_, path_ + "1.nse");
             }
 
-            size_t read(char* data, size_t data_size, size_t offset = 0) override
+            size_t drive_read(char* data, size_t data_size, size_t offset)
             {
                 static_data_.clear();
                 static_data_.seekg(offset);
@@ -38,11 +38,21 @@ namespace nse
                 return static_cast<size_t>(static_data_.gcount());
             }
 
-            void write(const char* data, size_t data_size, size_t offset = 0) override
+            void drive_write(const char* data, size_t data_size, size_t offset)
             {
                 static_data_.clear();
                 static_data_.seekp(offset);
                 static_data_.write(data, data_size);
+            }
+
+            size_t read(char* data, size_t data_size, size_t offset) override
+            {
+                return 0;
+            }
+
+            void write(const char* data, size_t data_size, size_t offset) override
+            {
+                cache_.write(data, data_size, offset);
             }
 
             // write entity values at offset
@@ -52,25 +62,37 @@ namespace nse
                 nse_debug << "write entity at " << start_offset;
                 ndb::for_each([&](auto&& Index, auto&& v)
                 {
-                  using value_type = std::decay_t<decltype(v)>;
+                    using value_type = std::decay_t<decltype(v)>;
 
-                  size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
-                  constexpr size_t item_size = Entity::template item_size<decltype(Index){}>();
+                    size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
+                    constexpr size_t item_size = Entity::template item_size<decltype(Index){}>();
 
-                  // value is fundamental
-                  if constexpr (std::is_fundamental<value_type>::value)
-                {
-                // check if value can be store in field
-                static_assert(sizeof(value_type) <= item_size, "field cannot store value");
-                cache_.write(reinterpret_cast<const char*>(&v), item_size, offset);
-                }
-                  else if (std::is_pointer<value_type>::value)
-                {
-                  // write from pointer to pointer + item_size, rest is not zero filled
-                  cache_.write(reinterpret_cast<const char*>(v), item_size, offset);
-                }
-
+                    // value is fundamental
+                    if constexpr (std::is_fundamental<value_type>::value)
+                    {
+                        // check if value can be store in field
+                        static_assert(sizeof(value_type) <= item_size, "field cannot store value");
+                        write(reinterpret_cast<const char*>(&v), item_size, offset);
+                    }
+                    else if (std::is_pointer<value_type>::value)
+                    {
+                        // write from pointer to pointer + item_size, rest is not zero filled
+                        write(reinterpret_cast<const char*>(v), item_size, offset);
+                    }
                 }, values...);
+            }
+
+            // synchronize cache
+            void sync()
+            {
+                for (auto& page : cache_.page_list())
+                {
+                    if (!page.is_sync())
+                    {
+                        nse_debug << "write page " << page.index() << " at file offset " << page.offset();
+                        drive_write(page.data(), page.size(), page.offset());
+                    }
+                }
             }
 
         private:

@@ -14,6 +14,12 @@ namespace nse
         virtual char at(size_t index) const = 0;
         virtual size_t size() const = 0;
         virtual size_t capacity() const = 0;
+
+        char* data_at(size_t offset)
+        {
+            nse_assert(offset < capacity());
+            return data() + offset;
+        }
     };
 } // nse
 

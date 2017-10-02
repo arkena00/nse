@@ -4,44 +4,69 @@
 #include <nse/dynamic_block.hpp>
 #include <nse/page.hpp>
 #include <array>
+#include <optional>
 #include <ndb/utility.hpp>
 #include "debug.hpp"
 
 namespace nse
 {
-    template<size_t Page_size, size_t Page_count = 1>
+    namespace detail
+    {
+        template<size_t... Ns, class F>
+        auto make_indexed(std::index_sequence<Ns...>, F&& f)
+        {
+            return f(Ns...);
+        };
+    } // detail
+
+    template<size_t Page_size, size_t Page_count>
     class cache
     {
+        using Page = nse::page<Page_size>;
     public:
-        cache() : page_list_{page(0), page(3)}
+        cache()
         {
-
         }
 
+        auto page_list()
+        {
+            return page_list_;
+        }
+
+        Page* page_for(size_t offset, size_t data_size)
+        {
+            for (Page& page : page_list_)
+            {
+                nse_debug << "search " << page.index() << " " << offset << " in " << page.offset() << " - " << page.offset_last();
+                // search a page who can store data
+                if (page.has_offset(offset) && page.can_store(offset, data_size))
+                {
+                    std::cout << " FOUND " << page.index() << " can store " << data_size;
+                    return &page;
+                }
+            }
+            nse_debug << "no page found";
+            return nullptr;
+        }
+
+        // write into cache
         void write(const char* data, size_t data_size, size_t offset = 0)
         {
-            nse_debug << "cache write at " << offset;
-            int relative_offset =0;
-            if (relative_offset < 0) nse_error << "offset not in range";
-
-            // write in buffer
-            if (relative_offset + data_size > data_.capacity())
+            size_t relative_offset = 0;
+            Page* page = page_for(offset, data_size);
+            if (page != nullptr)
             {
-                std::cout << "\nbufer is full";
-                // write buffer
-
-                // reset buffer with new location
-                relative_offset = 0;
+                page->write(data, data_size, offset);
             }
-            data_.write(data, data_size, relative_offset);
         }
 
     private:
         dynamic_block<Page_size * Page_count> data_;
-        std::array<nse::page, Page_count> page_list_ = ndb::make_array<nse::page, Page_count>([](size_t n)
+        std::array<Page, Page_count> page_list_ = detail::make_indexed(std::make_index_sequence<Page_count>{},
+        [this](auto... ns)
         {
-            return n * Page_size; }
-        );
+            return std::array<Page, Page_count>{ Page{data_, ns, ns * Page_size}... };
+        });
     };
 } // nse
 

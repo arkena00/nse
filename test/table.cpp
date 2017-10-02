@@ -24,8 +24,8 @@ void populate(nse::table<zeta>& table)
     {
         table.add((uint16_t) i, (uint16_t) 0x6161, "ZZTTTTTT");
     }
-
-    //table.sync();
+    table.sync();
+    std::cout << "\n\nsynchronized : " << table.header().entity_count();
 }
 
 int main()
@@ -37,12 +37,13 @@ int main()
 
         std::cout << "count : " << table.header().entity_count();
 
+        /*
         std::cout << std::endl;
         for (size_t i = 0; i != table.header().entity_count(); i++)
         {
             auto item3 = table.get(i);
             nse::debug::display(item3);
-        }
+        }*/
 
         //nse::debug::display(table.buffer_, zeta::Detail_::size);
 

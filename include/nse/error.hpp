@@ -36,4 +36,6 @@ namespace nse
 
 #define nse_error throw nse::error()
 
+#define nse_assert(C) if (!(C)) nse_error << "assertion failed";
+
 #endif // ERROR_H_NSE

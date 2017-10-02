@@ -39,7 +39,7 @@ namespace nse
 
         char* data() override
         {
-            return data_;
+            return data_ ;
         }
 
         size_t size() const override

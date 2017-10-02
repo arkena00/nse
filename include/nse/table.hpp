@@ -58,10 +58,9 @@ namespace nse
         using Entity = typename Model_table::Detail_::entity;
 
         explicit table(const std::string& name = "main") :
-            accessor_(name),
-            buffer_(header_.size())
+            accessor_(name)
         {
-            size_t header_status  = accessor_.read(header_.data(), header_.size());
+            size_t header_status  = accessor_.read(header_.data(), header_.size(), 0);
             if (header_status != 0) nds::encoder<>::decode(header_);
         }
 
@@ -83,11 +82,6 @@ namespace nse
         size_t entity_offset(size_t index) const
         {
             return entity_offset() + index * entity_size();
-        }
-
-        bool buffer_has_entity(size_t index) const
-        {
-            return entity_offset(index) + entity_size() <= buffer_.offset() + buffer_.capacity();
         }
 
         // get entity as block
@@ -114,38 +108,17 @@ namespace nse
             // update header
             header_.entity_add();
             nds::encoder<>::encode(header_);
-            accessor_.write(header_.data(), header_.size());
-
-            /*
-            // check if buffer can store new entity
-            if (buffer_.size() + entity_size() > buffer_.capacity())
-            {
-                // sync buffer
-                sync();
-                // reset buffer with new location
-                buffer_.reset(buffer_.offset() + buffer_.size());
-            }
-            // add entity at end of buffer data
-            auto write_offset = buffer_.size();
-            // write new entity
-            io::write<Entity>(buffer_, write_offset, values...);
-             */
-
+            accessor_.write(header_.data(), header_.size(), 0);
         }
 
         void del(size_t index) {}
 
         void sync()
         {
-            // update header
-            nds::encoder<>::encode(header_);
-            accessor_.write(header_.data(), header_.size());
-            // write buffer
-            accessor_.write(buffer_.data(), buffer_.size(), buffer_.offset());
+            accessor_.sync();
         }
 
     public:
-        dynamic_block<Entity::size() * 5> buffer_;
         nse::header header_;
         Accessor accessor_;
     };
