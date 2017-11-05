@@ -1,3 +1,6 @@
+static auto nse_testing_value = 0;
+
+
 #include <ndb/engine/nse/nse.hpp>
 #include <ndb/engine/sql/sql.hpp>
 #include <ndb/field.hpp>
@@ -35,19 +38,29 @@ struct zetachar : ndb::table
 };
 
 
-auto nse_test = [](benchmark::State& state, nse::table<zetachar>* table)
+auto nse_base = [](benchmark::State& state, nse::table<zetachar>* table)
 {
-    while (state.KeepRunning())
+    while(state.KeepRunning())
     {
-        table->add((char) 255,  15, "11111");
+        nse_testing_value = 0;
+        for (size_t i = 0; i != 1000; i++)
+        {
+            table->add((char) 255,  15, 65535);
+        }
+        table->sync();
     }
 };
 
-auto nse_testchar = [](benchmark::State& state, nse::table<zetachar>* table)
+auto nse_test = [](benchmark::State& state, nse::table<zetachar>* table)
 {
-    while (state.KeepRunning())
+    while(state.KeepRunning())
     {
-        table->add((char) 255,  15, 65535);
+        nse_testing_value = 1;
+        for (size_t i = 0; i != 5000; i++)
+        {
+            table->add((char) 255,  15, 65535);
+        }
+        table->sync();
     }
 };
 
@@ -56,10 +69,13 @@ auto sql_test = [](benchmark::State& state, sqlite3_stmt* statement)
 {
     while (state.KeepRunning())
     {
-        sqlite3_bind_text(statement, 1, "zeta_test", -1, SQLITE_STATIC);
-        sqlite3_bind_int(statement, 2, 25);
+        for (size_t i = 0; i != 1000; i++)
+        {
+            sqlite3_bind_text(statement, 1, "zeta_test", -1, SQLITE_STATIC);
+            sqlite3_bind_int(statement, 2, 25);
 
-        sqlite3_step(statement);
+            sqlite3_step(statement);
+        }
     }
 };
 
@@ -86,13 +102,14 @@ int main(int argc, char** argv)
     sqlite3_prepare_v2(db, query.c_str(), -1, &statement, 0);
 
 
-    benchmark::RegisterBenchmark("sql_test", sql_test, statement);
+    //benchmark::RegisterBenchmark("sql_test", sql_test, statement);
 
-    nse::table<zetachar> table("test");
-    nse::table<zetachar> table2("testchar");
+    nse::table<zetachar> table("base");
+    nse::table<zetachar> table2("testing");
     nse::table<zetachar> table3;
-    benchmark::RegisterBenchmark("nse_test", nse_test, &table);
-    benchmark::RegisterBenchmark("nse_testchar", nse_testchar, &table2);
+    auto b1 = benchmark::RegisterBenchmark("base", nse_base, &table)->Unit(benchmark::kMicrosecond);
+    auto b2 = benchmark::RegisterBenchmark("testing", nse_test, &table2)->Unit(benchmark::kMicrosecond);
+
 
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();

@@ -18,14 +18,16 @@ struct zeta : ndb::table
     static constexpr Detail_ detail_{"zeta"};
 };
 
-void populate(nse::table<zeta>& table)
+void populate(int z, nse::table<zeta>& table)
 {
-    for (size_t i = 0; i != 3; i++)
+    for (size_t i = 0; i != z; i++)
     {
-        table.add((uint16_t) i, (uint16_t) 0x6161, "ZZTTTTTT");
+        table.add((uint16_t) i, (uint16_t) 0xAAAA, "YYY");
     }
     table.sync();
     std::cout << "\n\nsynchronized : " << table.header().entity_count();
+    std::cout << "\nentity size : " << table.entity_size();
+    std::cout << "\ntotal size : " << table.header().entity_count() * table.entity_size();
 }
 
 int main()
@@ -33,7 +35,7 @@ int main()
     try
     {
         nse::table<zeta> table;
-        populate(table); return 0;
+        populate(11, table); return 0;
 
         std::cout << "count : " << table.header().entity_count();
 
