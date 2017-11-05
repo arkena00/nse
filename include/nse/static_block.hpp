@@ -18,6 +18,9 @@ namespace nse
 
         void write(const char* data, size_t data_size, size_t offset = 0) override
         {
+            if (offset + data_size > capacity()) nse_error << "static_block overflow, capacity : "
+                                                           << capacity() << ", trying to write at "
+                                                           << (offset + data_size);
             memcpy(data_.data() + offset, data, data_size);
         }
 

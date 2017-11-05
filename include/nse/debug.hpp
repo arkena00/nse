@@ -7,7 +7,16 @@
 #include <fstream>
 #include <string>
 
-#define nse_debug std::cout << std::endl
+#ifndef nse_debug_mode
+    #define nse_debug_mode true
+#endif
+#if nse_debug_mode == false
+    #define nse_debug_mode_enable true
+#else
+    #define nse_debug_mode_enable false
+#endif
+
+#define nse_debug if (nse_debug_mode_enable) {} else std::cout << std::endl
 
 namespace graphic
 {

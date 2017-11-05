@@ -12,8 +12,8 @@ namespace nse
     class page
     {
     public:
-        explicit page(block_base& cache, size_t index, size_t offset) :
-            cache_(cache),
+        explicit page(block_base& cache_block, size_t index, size_t offset) :
+            cache_block_(cache_block),
             sync_(true),
             index_(index),
             offset_(offset)
@@ -22,15 +22,15 @@ namespace nse
         void write(const char* data, size_t data_size, size_t offset)
         {
             auto relative_offset = (index_ * Size) + offset - offset_;
-            //nse_debug << "page " << index_ << " write " << data_size << " at " << relative_offset;
-            cache_.write(data, data_size, relative_offset);
+            nse_debug << "page " << index_ << " write " << data_size << " at " << relative_offset;
+            cache_block_.write(data, data_size, relative_offset);
             sync_ = false;
         }
 
         const char* data() const
         {
             auto cache_offset = (index_ * Size);
-            return cache_.data_at(cache_offset);
+            return cache_block_.data_at(cache_offset);
         }
 
         int state() const
@@ -66,7 +66,7 @@ namespace nse
 
         bool can_store(size_t abs_offset, size_t data_size) const
         {
-            return has_offset(abs_offset) && (abs_offset + data_size) <= offset_last();
+            return has_offset(abs_offset) && (abs_offset + data_size) <= offset_last() + 1;
         }
 
         bool is_sync()
@@ -74,8 +74,13 @@ namespace nse
             return sync_;
         }
 
+        void sync(bool n)
+        {
+            sync_ = n;
+        }
+
     private:
-        block_base& cache_;
+        block_base& cache_block_;
         int state_;
         bool sync_;
 

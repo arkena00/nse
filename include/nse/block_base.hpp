@@ -2,6 +2,7 @@
 #define BLOCK_BASE_H_NSE
 
 #include <cstddef>
+#include <nse/error.hpp>
 
 namespace nse
 {

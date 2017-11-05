@@ -27,7 +27,7 @@ namespace nse
         char* data() { return data_.data(); }
 
     private:
-        nse::static_block<Header::count()> data_;
+        nse::static_block<Header::count() * sizeof(size_t)> data_;
         size_t entity_count_;
     };
 
@@ -36,9 +36,10 @@ namespace nse
 namespace nds
 {
     template<>
-    void encoder<>::encode(nse::header& in)
+    void encoder<>::encode_ref(nse::header& in)
     {
-        in.data_.write(reinterpret_cast<char*>(&in.entity_count_), nse::Header::item_size<0>());
+        in.data_.write(reinterpret_cast<char*>(&in.entity_count_), nse::Header::item_size<0>(), 0);
+        in.data_.write(reinterpret_cast<char*>(&in.entity_count_), nse::Header::item_size<1>(), 4);
     }
 
     template<>
@@ -58,7 +59,7 @@ namespace nse
         using Entity = typename Model_table::Detail_::entity;
 
         explicit table(const std::string& name = "main") :
-            accessor_(name)
+            accessor_(entity_offset(), name)
         {
             size_t header_status  = accessor_.read(header_.data(), header_.size(), 0);
             if (header_status != 0) nds::encoder<>::decode(header_);
@@ -77,6 +78,11 @@ namespace nse
         size_t entity_offset() const
         {
             return header_.size();
+        }
+
+        size_t entity_count() const
+        {
+            return header_.entity_count();
         }
 
         size_t entity_offset(size_t index) const
@@ -103,12 +109,9 @@ namespace nse
             static_assert(sizeof...(Ts) == Entity::count(), "number of value must match number of fields");
 
             // write entity
-            nse_debug << "table write at " << entity_offset() + header_.entity_count() * entity_size();
-            accessor_.write<Entity>(entity_offset() + header_.entity_count() * entity_size(), values...);
+            accessor_.async_write<Entity>(entity_offset() + entity_count() * entity_size(), values...);
             // update header
             header_.entity_add();
-            nds::encoder<>::encode(header_);
-            accessor_.write(header_.data(), header_.size(), 0);
         }
 
         void del(size_t index) {}
@@ -116,6 +119,9 @@ namespace nse
         void sync()
         {
             accessor_.sync();
+            // write header
+            nds::encoder<>::encode_ref(header_);
+            accessor_.write(header_.data(), header_.size(), 0);
         }
 
     public:

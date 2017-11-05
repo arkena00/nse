@@ -7,30 +7,25 @@
 #include <nse/cache.hpp>
 #include <fstream>
 #include "debug.hpp"
+#include "static_block.hpp"
+#include <nse/io.hpp>
 
 namespace nse
 {
     namespace io
     {
-        class accessor_base
+        class drive_accessor : io::base
         {
         public:
-            virtual size_t read(char* data, size_t data_size, size_t offset) = 0;
-            virtual void write(const char* data, size_t data_size, size_t offset) = 0;
-        };
-
-
-        class drive_accessor : accessor_base
-        {
-        public:
-            explicit drive_accessor(const std::string& name = "main") :
+            explicit drive_accessor(size_t cache_offset = 0, const std::string& name = "main") :
+                cache_(*this, cache_offset),
                 path_("./" + name)
             {
                 open(static_data_, path_ + "0.nse");
                 open(dynamic_data_, path_ + "1.nse");
             }
 
-            size_t drive_read(char* data, size_t data_size, size_t offset)
+            size_t read(char* data, size_t data_size, size_t offset) override
             {
                 static_data_.clear();
                 static_data_.seekg(offset);
@@ -38,61 +33,61 @@ namespace nse
                 return static_cast<size_t>(static_data_.gcount());
             }
 
-            void drive_write(const char* data, size_t data_size, size_t offset)
+            void write(const char* data, size_t data_size, size_t offset) override
             {
                 static_data_.clear();
                 static_data_.seekp(offset);
                 static_data_.write(data, data_size);
             }
 
-            size_t read(char* data, size_t data_size, size_t offset) override
+            size_t async_read(char* data, size_t data_size, size_t offset)
             {
                 return 0;
             }
 
-            void write(const char* data, size_t data_size, size_t offset) override
+            void async_write(const char* data, size_t data_size, size_t offset)
             {
-                cache_.write(data, data_size, offset);
+                nse_debug << "cache write at " << offset - cache_.offset();
+                cache_.write(data, data_size, offset - cache_.offset());
             }
 
             // write entity values at offset
             template<class Entity, class... Ts>
-            void write(size_t start_offset, Ts... values)
+            void async_write(size_t start_offset, Ts... values)
             {
-                nse_debug << "write entity at " << start_offset;
-                ndb::for_each([&](auto&& Index, auto&& v)
+                // tmp buffer
+                nse::static_block<Entity::size()> buffer;
+
+                nse_debug << "write entity at " << start_offset << " size " << Entity::size();
+                ndb::for_each([&](auto&& index, auto&& v)
                 {
                     using value_type = std::decay_t<decltype(v)>;
 
-                    size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
-                    constexpr size_t item_size = Entity::template item_size<decltype(Index){}>();
+                    // size_t offset =  start_offset + Entity::template offset<decltype(Index){}>();
+                    size_t offset =  Entity::template offset<decltype(index){}>();
+                    constexpr size_t item_size = Entity::template item_size<decltype(index){}>();
 
                     // value is fundamental
                     if constexpr (std::is_fundamental<value_type>::value)
                     {
                         // check if value can be store in field
                         static_assert(sizeof(value_type) <= item_size, "field cannot store value");
-                        write(reinterpret_cast<const char*>(&v), item_size, offset);
+                        buffer.write(reinterpret_cast<const char*>(&v), item_size, offset);
                     }
-                    else if (std::is_pointer<value_type>::value)
+                    else if constexpr (std::is_pointer<value_type>::value)
                     {
                         // write from pointer to pointer + item_size, rest is not zero filled
-                        write(reinterpret_cast<const char*>(v), item_size, offset);
+                        buffer.write(reinterpret_cast<const char*>(v), item_size, offset);
                     }
                 }, values...);
+
+                async_write(buffer.data(), Entity::size(), start_offset);
             }
 
             // synchronize cache
             void sync()
             {
-                for (auto& page : cache_.page_list())
-                {
-                    if (!page.is_sync())
-                    {
-                        nse_debug << "write page " << page.index() << " at file offset " << page.offset();
-                        drive_write(page.data(), page.size(), page.offset());
-                    }
-                }
+                cache_.sync();
             }
 
         private:
@@ -114,10 +109,11 @@ namespace nse
             std::fstream static_data_;
             std::fstream dynamic_data_;
 
-            dynamic_block<32> buffer_;
-            nse::cache<32, 2> cache_;
+            nse::cache<28, 2> cache_;
         };
     } // io
 } // nse
 
 #endif // ACCESSOR_H_NSE
+
+// remove cache offset add offset to pages
